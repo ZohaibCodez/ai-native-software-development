@@ -28,7 +28,7 @@ These are the commands you'll use most often. Don't try to memorize them all at 
 | **`/compact`** | Summarize conversation | When approaching token limit | `/compact` |
 | **`ESC`** | Stop generation | Claude is generating too much, stop it | Press `ESC` once |
 | **`ESC ESC`** | Emergency stop | Claude won't stop, force quit | Press `ESC` twice quickly |
-| **`/mcp`** | Manage external tools | List or add MCP servers | `/mcp list` |
+| **`/mcp`** | Check MCP servers | View configured MCP server status | `/mcp` |
 | **`/usage`** | Check usage | Show plan usage daily/weekly limits | `/usage` |
 | **`/permissions`** | Control access | Set what Claude can do | `/permissions` |
 
@@ -204,27 +204,42 @@ claude "Explain dependency injection in detail"
 
 ---
 
-### 8. `/mcp` - Manage External Tools
+### 8. `/mcp` - Check MCP Server Status
 
-**Purpose**: List, add, or configure MCP servers (external tools)
+**Purpose**: Display configured MCP servers (external tools)
 
 **Syntax**:
 ```bash
-/mcp list                                    # Show connected tools
-/mcp add <name> <command>                   # Add a tool
+/mcp                              # Show MCP server status
+/mcp reconnect <server-name>     # Reconnect to a specific server
 ```
 
 **When to use**:
-- You want Claude to access external data (web, databases, APIs)
-- Need to check what tools are connected
-- Setting up MCP servers (covered in Lesson 6)
+- Check which MCP servers are configured
+- Verify MCP servers are connected
+- Troubleshoot MCP server connections
 
 **Example**:
 ```bash
-/mcp list
+/mcp
 ```
 
-**Output**: Shows all connected MCP servers (e.g., web search, docs, GitHub)
+**Example Output (no servers configured)**:
+```
+No MCP servers configured. Please run /doctor if this is unexpected.
+Otherwise, run `claude mcp` or visit https://docs.claude.com/en/docs/claude-code/mcp
+to learn more.
+```
+
+**Example Output (servers configured)**:
+```
+MCP Servers:
+- web-search: ✓ Connected
+- github: ✓ Connected
+- docs: ✗ Disconnected
+```
+
+**Note**: To configure MCP servers, use `claude mcp` command or edit your configuration files. This is covered in detail in Lesson 6.
 
 ---
 
@@ -232,7 +247,18 @@ claude "Explain dependency injection in detail"
 
 **Purpose**: Show plan usage limits
 
+**Syntax**:
+```bash
+/usage    # Check current usage
+```
+
+**When to use**:
+- Before starting large tasks
+- When approaching daily/weekly limits
+- To understand usage patterns
+
 **Example Output**:
+```
 Settings:  Status   Config   Usage   (tab to cycle)
 
  Current session
@@ -273,7 +299,7 @@ Settings:  Status   Config   Usage   (tab to cycle)
 /permissions
 ```
 
-**Output**:
+**Example Output**:
 ```
 Current permissions:
 - Read files: ✓ Allowed
@@ -281,6 +307,8 @@ Current permissions:
 - Execute commands: ✓ Allowed (approval required)
 - Access network: ✗ Denied
 ```
+
+**Best practice**: Review permissions when starting work on a new project or when handling sensitive data.
 
 ---
 
