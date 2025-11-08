@@ -254,15 +254,3 @@ I had trouble with [describe issue].
 My system: [Windows/Mac/Linux]
 Help me resolve this and verify Git works.
 ```
-
----
-
-## What's Next
-
-**Lesson 3**: Learn five daily Git commands using Gemini CLI:
-- Initialize repositories
-- Track changes
-- Save snapshots
-- Backup to GitHub
-
-Setup is the hardest part. Everything after is easier.

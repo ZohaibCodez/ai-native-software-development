@@ -375,11 +375,3 @@ What should I do if:
 
 Explain each solution.
 ```
-
----
-
-## What's Next
-
-**Lesson 7**: Pull Requests - the professional way to propose and review code changes.
-
-**Key takeaway**: GitHub = your code's cloud home. Push often, pull before working, never lose work again.

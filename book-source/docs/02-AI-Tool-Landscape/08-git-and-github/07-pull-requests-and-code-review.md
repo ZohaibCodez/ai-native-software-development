@@ -436,11 +436,3 @@ Explain what happens when:
 
 Does the PR update automatically?
 ```
-
----
-
-## What's Next
-
-**Lesson 8**: IDE setup - connect VS Code/Cursor/Zed to Git and GitHub for visual workflows.
-
-**Key takeaway**: Pull Requests = Professional safety check. Review, document AI help, merge with confidence.

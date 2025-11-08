@@ -316,11 +316,3 @@ Scenario: I committed code, pushed to GitHub, then realized it breaks production
 What's the safest way to undo this?
 Walk me through the steps.
 ```
-
----
-
-## What's Next
-
-**Lesson 5**: Learn branches - the ultimate safe experimentation tool. Create a copy of your code, test AI's changes there, merge only if they work.
-
-**Key takeaway**: Git + AI = fearless coding. You can always undo, fix, and try again.

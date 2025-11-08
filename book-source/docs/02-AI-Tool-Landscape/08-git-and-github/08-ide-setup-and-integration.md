@@ -427,11 +427,3 @@ Explain the difference between:
 
 Are they doing the same thing?
 ```
-
----
-
-## What's Next
-
-**Lesson 9**: Capstone project - build a complete calculator where AI writes code, you manage Git, test everything, and push to GitHub. Brings together all 8 lessons.
-
-**Key takeaway**: IDEs make Git visual and fast. Same operations, just click instead of type.

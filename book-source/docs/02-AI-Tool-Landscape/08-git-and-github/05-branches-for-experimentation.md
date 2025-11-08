@@ -343,11 +343,3 @@ Scenario: I made changes on main by accident (should've used a branch).
 How do I move those changes to a new branch and restore main?
 Walk me through the recovery steps.
 ```
-
----
-
-## What's Next
-
-**Lesson 6**: Push branches to GitHub for backup and collaboration.
-
-**Key takeaway**: Branches = Safe experimentation. Your main code stays protected until you decide to merge.

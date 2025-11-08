@@ -296,11 +296,3 @@ Explain back to me:
 3. Why do I write commit messages?
 4. Can I have multiple commits before pushing?
 ```
-
----
-
-## What's Next
-
-**Lesson 4**: Learn how to undo mistakes safely. Git lets you go back to any save point.
-
-**Key takeaway**: Git with AI is a safety net. You experiment freely because you can always undo.

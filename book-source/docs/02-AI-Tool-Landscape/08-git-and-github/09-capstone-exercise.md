@@ -602,34 +602,6 @@ You used these throughout the project:
 
 Ask Gemini CLI in natural language - it handles the details.
 
----
-
-## What's Next
-
-**You now have**:
-- Complete Git & GitHub skills
-- AI-assisted development experience
-- Portfolio project on GitHub
-- Professional workflow knowledge
-
-**Continue building**:
-1. Create more projects using this workflow
-2. Contribute to open source projects
-3. Collaborate with other developers
-4. Deploy your projects online
-
-**Remember**: AI writes code, you manage Git. This is how modern developers work.
-
-**Keep learning**:
-- Python (to understand the code better)
-- Testing (pytest, unit tests)
-- Deployment (put projects online)
-- Collaboration (work with teams)
-
-**Most important**: Build things. Every project reinforces these Git skills.
-
----
-
 ## Congratulations!
 
 You completed Chapter 8: Git & GitHub for AI-Driven Development.
