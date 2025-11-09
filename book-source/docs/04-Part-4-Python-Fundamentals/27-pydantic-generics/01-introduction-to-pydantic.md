@@ -452,8 +452,3 @@ Using your AI companion (Claude Code, Gemini CLI, or ChatGPT), practice Pydantic
 > "Build a UserProfile model with a nested Address model. Include: UserProfile (name, email, age), Address (street, city, zip_code). Add validation that zip_code must be exactly 5 digits. Generate test data showing both valid and invalid zip codes, and demonstrate the validation errors."
 
 **Expected Outcome**: Nested UserProfile and Address models with custom validation on zip_code, example data for valid cases (zip: "12345"), invalid cases (zip: "ABC"), and clear error messages showing which field failed validation and why.
-
----
-
-**Safety & Ethics Note**: Pydantic is a tool for ensuring data integrity—validation should never be used to discriminate, violate privacy, or restrict access unfairly. Use validation to protect your systems and users, not to gatekeep. Always be transparent about what validation rules you're enforcing and why.
-
