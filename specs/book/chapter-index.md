@@ -104,8 +104,8 @@ Core language skills: production-quality Python with AIDD
 | 19 | Set, Frozen Set, and GC | `19-set-frozenset-gc/` | ✅ Implemented & Validated |
 | 20 | Module and Functions | `20-module-functions/` | 📋 Planned |
 | 21 | Exception Handling | `21-exception-handling/` | ✅ Implemented & Validated |
-| 22 | IO and File Handling | `22-io-file-handling/` | 📋 Planned |
-| 23 | Math, Date Time Calendar | `23-math-datetime-calendar/` | 📋 Planned |
+| 22 | IO and File Handling | `22-io-file-handling/` | ✅ Implemented |
+| 23 | Math, Date Time Calendar | `23-math-datetime-calendar/` | ✅ Implemented |
 | 24 | Object-Oriented Programming Part I | `24-oop-part-1/` | ✅ Implemented & Validated |
 | 25 | Object-Oriented Programming Part II | `25-oop-part-2/` | ✅ Implemented & Validated |
 | 26 | Meta Classes and Data Classes | `26-metaclasses-dataclasses/` | ✅ Implemented |
