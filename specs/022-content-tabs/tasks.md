@@ -64,13 +64,13 @@ description: "Implementation tasks for Interactive Content Tabs with AI Summariz
 
 ### Implementation for User Story 1
 
-- [ ] T014 [P] [US1] Create TabBar component in `book-source/src/components/ContentTabs/TabBar.tsx` with three tab buttons and active state prop
-- [ ] T015 [P] [US1] Create OriginalTab component in `book-source/src/components/ContentTabs/OriginalTab.tsx` to render children (page content) unchanged
-- [ ] T016 [P] [US1] Create PersonalizedTab placeholder component in `book-source/src/components/ContentTabs/PersonalizedTab.tsx` displaying "Feature coming soon" message
-- [ ] T017 [US1] Create main ContentTabs compound component in `book-source/src/components/ContentTabs/index.tsx` with state management for `activeTab` defaulting to `'original'`
-- [ ] T018 [US1] Add CSS styles in `book-source/src/components/ContentTabs/styles.module.css` for tab bar layout, active/inactive tab states, and content area
-- [ ] T019 [US1] Integrate ContentTabs into Docusaurus theme by wrapping content in `book-source/src/theme/DocItem/Content/index.tsx` with tabs component
-- [ ] T020 [US1] Add mobile-responsive CSS breakpoints in `book-source/src/components/ContentTabs/styles.module.css` for tabs at viewport widths <768px
+- [x] T014 [P] [US1] Create TabBar component in `book-source/src/components/ContentTabs/TabBar.tsx` with three tab buttons and active state prop
+- [x] T015 [P] [US1] Create OriginalTab component in `book-source/src/components/ContentTabs/OriginalTab.tsx` to render children (page content) unchanged
+- [x] T016 [P] [US1] Create PersonalizedTab placeholder component in `book-source/src/components/ContentTabs/PersonalizedTab.tsx` displaying "Feature coming soon" message
+- [x] T017 [US1] Create main ContentTabs compound component in `book-source/src/components/ContentTabs/index.tsx` with state management for `activeTab` defaulting to `'original'`
+- [x] T018 [US1] Add CSS styles in `book-source/src/components/ContentTabs/styles.module.css` for tab bar layout, active/inactive tab states, and content area
+- [x] T019 [US1] Integrate ContentTabs into Docusaurus theme by wrapping content in `book-source/src/theme/DocItem/Content/index.tsx` with tabs component
+- [x] T020 [US1] Add mobile-responsive CSS breakpoints in `book-source/src/components/ContentTabs/styles.module.css` for tabs at viewport widths <768px
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -84,11 +84,11 @@ description: "Implementation tasks for Interactive Content Tabs with AI Summariz
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Implement click handlers in `book-source/src/components/ContentTabs/TabBar.tsx` to call `setActiveTab()` callback
-- [ ] T022 [US2] Add active tab visual styling in `book-source/src/components/ContentTabs/styles.module.css` with distinct color, border, and font weight for active state
-- [ ] T023 [US2] Implement conditional rendering in `book-source/src/components/ContentTabs/index.tsx` to show/hide tab content based on `activeTab` state
-- [ ] T024 [US2] Add idempotent click handling in `book-source/src/components/ContentTabs/TabBar.tsx` to ignore clicks on already-active tab
-- [ ] T025 [US2] Implement tab state preservation during same-page interactions (scroll position maintained when switching back to a tab)
+- [x] T021 [US2] Implement click handlers in `book-source/src/components/ContentTabs/TabBar.tsx` to call `setActiveTab()` callback
+- [x] T022 [US2] Add active tab visual styling in `book-source/src/components/ContentTabs/styles.module.css` with distinct color, border, and font weight for active state
+- [x] T023 [US2] Implement conditional rendering in `book-source/src/components/ContentTabs/index.tsx` to show/hide tab content based on `activeTab` state
+- [x] T024 [US2] Add idempotent click handling in `book-source/src/components/ContentTabs/TabBar.tsx` to ignore clicks on already-active tab
+- [x] T025 [US2] Implement tab state preservation during same-page interactions (scroll position maintained when switching back to a tab)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 

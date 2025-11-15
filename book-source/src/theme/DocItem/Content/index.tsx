@@ -5,6 +5,7 @@ import {useDoc} from '@docusaurus/plugin-content-docs/client';
 import Heading from '@theme/Heading';
 import MDXContent from '@theme/MDXContent';
 import type {Props} from '@theme/DocItem/Content';
+import ContentTabs from '@site/src/components/ContentTabs';
 
 /**
  Title can be declared inside md content or declared through
@@ -28,6 +29,11 @@ function useSyntheticTitle(): string | null {
 
 export default function DocItemContent({children}: Props): ReactNode {
   const syntheticTitle = useSyntheticTitle();
+  const {metadata} = useDoc();
+  
+  // Generate pageId from the document's permalink or id
+  const pageId = metadata.id || metadata.permalink;
+  
   return (
     <div className={clsx(ThemeClassNames.docs.docMarkdown, 'markdown')}>
       {syntheticTitle && (
@@ -35,7 +41,9 @@ export default function DocItemContent({children}: Props): ReactNode {
           <Heading as="h1">{syntheticTitle}</Heading>
         </header>
       )}
-      <MDXContent>{children}</MDXContent>
+      <ContentTabs pageId={pageId}>
+        <MDXContent>{children}</MDXContent>
+      </ContentTabs>
     </div>
   );
 }

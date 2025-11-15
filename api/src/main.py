@@ -50,9 +50,9 @@ async def root():
     }
 
 # TODO: Register routers (will be added in Phase 5)
-# from api.src.routers import summarize, auth
-# app.include_router(summarize.router, prefix="/api/v1", tags=["summarization"])
-# app.include_router(auth.router, prefix="/api/v1/auth", tags=["authentication"])
+from src.routers import summarize, auth
+app.include_router(summarize.router, prefix="/api/v1", tags=["summarization"])
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["authentication"])
 
 if __name__ == "__main__":
     import uvicorn
