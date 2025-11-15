@@ -17,6 +17,7 @@ router = APIRouter()
 async def summarize_content(
     pageId: str = Query(..., description="Unique identifier for the content page"),
     token: str = Query(..., description="Authentication token"),
+    content: str = Query(..., description="Page content to summarize"),
 ):
     """
     Generate streaming summary for content page using Server-Sent Events (SSE).
@@ -24,6 +25,8 @@ async def summarize_content(
     Validates authentication token, retrieves content, and streams AI-generated summary.
     """
     logger.info(f"Summarize request for pageId: {pageId}")
+    logger.info(f"Content length: {len(content)} characters")
+    logger.info(f"Content preview: {content[:200]}...")
     
     # Auth token validation (dummy implementation)
     if not token or token.strip() == "":
@@ -42,9 +45,10 @@ async def summarize_content(
         logger.warning(f"Invalid pageId: {pageId}")
         raise HTTPException(status_code=400, detail="Invalid page identifier")
     
-    # In production, fetch content from database or file system
-    # For now, use placeholder content
-    content = f"This is sample content for page: {pageId}. " * 50
+    # Content validation
+    if not content or len(content) < 50:
+        logger.warning(f"Content too short for pageId: {pageId}")
+        raise HTTPException(status_code=400, detail="Content too short to summarize")
     
     async def event_stream():
         """Generate Server-Sent Events stream"""

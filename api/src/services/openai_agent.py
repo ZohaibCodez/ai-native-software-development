@@ -12,6 +12,8 @@ load_dotenv(find_dotenv())
 
 logger = logging.getLogger(__name__)
 
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
 external_client = AsyncOpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
     api_key=os.getenv("GOOGLE_API_KEY")
@@ -27,7 +29,7 @@ async def generate_summary(content: str, page_id: str) -> AsyncGenerator[str, No
     Generate AI-powered summary of content using OpenAI Agents SDK.
     
     Uses Runner.run_streamed() with Agent for streaming responses with
-    proportional summary length calculation (20-25% of original, 150-500 word bounds).
+    proportional summary length calculation (30-35% of original, 150-500 word bounds).
     
     Args:
         content: Full page content text to summarize

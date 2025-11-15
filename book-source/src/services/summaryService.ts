@@ -28,6 +28,7 @@ export async function fetchSummary(
     const url = new URL(apiUrl, window.location.origin);
     url.searchParams.append('pageId', pageId);
     url.searchParams.append('token', token);
+    url.searchParams.append('content', content);
 
     const es = new EventSource(url.toString());
 
