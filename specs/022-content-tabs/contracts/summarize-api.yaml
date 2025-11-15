@@ -1,0 +1,286 @@
+openapi: 3.0.3
+info:
+  title: Content Summarization API
+  description: API for generating AI-powered summaries of content pages with streaming support
+  version: 1.0.0
+  contact:
+    name: Content Tabs Feature
+    url: https://github.com/ZohaibCodez/ai-native-software-development
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local development server
+  - url: https://api.example.com/v1
+    description: Production server (TBD)
+
+paths:
+  /summarize:
+    get:
+      summary: Generate streaming summary for content page
+      description: |
+        Generates an AI-powered summary of the specified content page.
+        Returns summary as Server-Sent Events (SSE) stream.
+        
+        **Authentication**: Required (dummy token for initial implementation)
+        **Caching**: Client should check sessionStorage before calling
+        **Rate Limiting**: TBD (future implementation)
+      operationId: summarize
+Content
+      tags:
+        - Summarization
+      parameters:
+        - name: pageId
+          in: query
+          required: true
+          description: Unique identifier for the content page (URL path)
+          schema:
+            type: string
+            example: "01-introducing-ai-driven-development/01-ai-development-revolution/06-autonomous-agent-era"
+        - name: Authorization
+          in: header
+          required: true
+          description: Bearer token for authentication (dummy implementation)
+          schema:
+            type: string
+            example: "Bearer dummy_token_12345"
+      responses:
+        '200':
+          description: Streaming summary response (SSE)
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                example: |
+                  data: {"chunk": "This chapter explores ", "done": false}
+                  
+                  data: {"chunk": "the autonomous agent era...", "done": false}
+                  
+                  data: {"chunk": "", "done": true}
+                  
+              examples:
+                streaming:
+                  summary: Example streaming response
+                  value: |
+                    data: {"chunk": "This chapter explores the autonomous agent era in AI development, ", "done": false}
+                    
+                    data: {"chunk": "highlighting how AI systems are evolving from passive tools to active collaborators. ", "done": false}
+                    
+                    data: {"chunk": "Key concepts include agent autonomy, reasoning capabilities, and tool usage. ", "done": false}
+                    
+                    data: {"chunk": "", "done": true}
+        '401':
+          description: Unauthorized - Missing or invalid auth token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Unauthorized"
+                message: "Missing or invalid authentication token"
+        '400':
+          description: Bad Request - Invalid pageId or content not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "BadRequest"
+                message: "Page ID is required"
+        '404':
+          description: Not Found - Content page does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "NotFound"
+                message: "Content page not found: {pageId}"
+        '429':
+          description: Too Many Requests - Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "RateLimitExceeded"
+                message: "Too many summary requests. Please try again in 60 seconds."
+        '500':
+          description: Internal Server Error - Summary generation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "InternalServerError"
+                message: "Unable to generate summary. Please try again later."
+
+  /auth/dummy-login:
+    post:
+      summary: Dummy login endpoint (temporary)
+      description: |
+        Temporary authentication endpoint for initial implementation.
+        Always succeeds and returns a dummy token.
+        **Will be replaced with SSO in future.**
+      operationId: dummyLogin
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+              example:
+                token: "dummy_token_12345"
+                expires: "session"
+                user:
+                  id: "dummy_user"
+                  name: "Anonymous User"
+
+  /auth/verify:
+    get:
+      summary: Verify authentication token
+      description: |
+        Validates the provided authentication token.
+        For dummy implementation, accepts any token.
+      operationId: verifyToken
+      tags:
+        - Authentication
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+            example: "Bearer dummy_token_12345"
+      responses:
+        '200':
+          description: Token is valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                    example: true
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+        '401':
+          description: Token is invalid or missing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Returns API health status
+      operationId: healthCheck
+      tags:
+        - System
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  timestamp:
+                    type: string
+                    format: date-time
+                  version:
+                    type: string
+                    example: "1.0.0"
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: "InternalServerError"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Unable to generate summary. Please try again later."
+        details:
+          type: object
+          description: Additional error details (optional)
+          additionalProperties: true
+
+    AuthResponse:
+      type: object
+      required:
+        - token
+        - expires
+      properties:
+        token:
+          type: string
+          description: Authentication token
+          example: "dummy_token_12345"
+        expires:
+          type: string
+          description: Token expiration ("session" for session-based)
+          example: "session"
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+
+    StreamChunk:
+      type: object
+      description: Individual chunk in SSE stream
+      required:
+        - chunk
+        - done
+      properties:
+        chunk:
+          type: string
+          description: Partial summary text
+          example: "This chapter explores the autonomous agent era..."
+        done:
+          type: boolean
+          description: Whether streaming is complete
+          example: false
+        error:
+          type: string
+          nullable: true
+          description: Error message if generation failed
+          example: null
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Dummy bearer token authentication (future: SSO token)
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Summarization
+    description: AI-powered content summarization endpoints
+  - name: Authentication
+    description: Authentication and authorization endpoints
+  - name: System
+    description: System health and monitoring endpoints
