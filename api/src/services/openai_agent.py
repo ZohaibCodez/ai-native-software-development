@@ -81,16 +81,33 @@ async def generate_summary(content: str, page_id: str) -> AsyncGenerator[str, No
         
         # Stream response chunks - iterate over events
         async for event in result.stream_events():
-            # Log all events to debug
-            logger.debug(f"Event type: {event.type}, Event: {event}")
+            # Log event type for debugging
+            logger.debug(f"Event type: {event.type}")
             
-            # Filter for text delta events (streaming text chunks)
+            # Handle different event types for text streaming
             if event.type == "raw_response_event":
-                # Check if it has delta content
-                if hasattr(event, 'data') and hasattr(event.data, 'delta'):
-                    if event.data.delta:
-                        logger.debug(f"Yielding chunk: {event.data.delta[:50]}...")
-                        yield event.data.delta
+                # Check various possible delta locations in the event
+                delta_text = None
+                
+                if hasattr(event, 'data'):
+                    # Try event.data.delta
+                    if hasattr(event.data, 'delta') and event.data.delta:
+                        delta_text = event.data.delta
+                    # Try event.data.content if delta not available
+                    elif hasattr(event.data, 'content') and event.data.content:
+                        delta_text = event.data.content
+                
+                # Direct event.delta check
+                if not delta_text and hasattr(event, 'delta') and event.delta:
+                    delta_text = event.delta
+                
+                # Direct event.content check
+                if not delta_text and hasattr(event, 'content') and event.content:
+                    delta_text = event.content
+                
+                if delta_text:
+                    logger.debug(f"Yielding delta: {delta_text[:50]}...")
+                    yield delta_text
         
         logger.info(f"Summary generation completed for page_id: {page_id}")
         

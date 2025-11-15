@@ -21,8 +21,10 @@ export default function SummaryTab({ pageId, content }: SummaryTabProps): React.
   const [error, setError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isCached, setIsCached] = useState(false);
+  const [streamingText, setStreamingText] = useState<string>('');
   const summaryEndRef = useRef<HTMLDivElement>(null);
   const generatingRef = useRef(false);
+  const summaryContainerRef = useRef<HTMLDivElement>(null);
 
   // Check authentication on mount
   useEffect(() => {
@@ -34,12 +36,13 @@ export default function SummaryTab({ pageId, content }: SummaryTabProps): React.
     }
   }, [pageId]);
 
-  // Auto-scroll to latest content
+  // Auto-scroll to latest content during streaming
   useEffect(() => {
-    if (summary && summaryEndRef.current) {
-      summaryEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    if (isGenerating && summaryContainerRef.current) {
+      // Smooth scroll to bottom during streaming
+      summaryContainerRef.current.scrollTop = summaryContainerRef.current.scrollHeight;
     }
-  }, [summary]);
+  }, [streamingText, isGenerating]);
 
   const checkCacheAndGenerate = async () => {
     // Check cache first
@@ -79,12 +82,14 @@ export default function SummaryTab({ pageId, content }: SummaryTabProps): React.
 
     generatingRef.current = true;
     setIsGenerating(true);
-    setIsLoading(true);
+    setIsLoading(true); // Show loading screen initially
     setError(null);
     setSummary('');
+    setStreamingText('');
 
     // Accumulator for final summary to cache
     let accumulatedSummary = '';
+    let firstChunkReceived = false;
 
     try {
       await summaryService.fetchSummary(
@@ -92,14 +97,22 @@ export default function SummaryTab({ pageId, content }: SummaryTabProps): React.
         content,
         token,
         (chunk) => {
+          // Hide loading screen and show streaming as soon as first chunk arrives
+          if (!firstChunkReceived) {
+            firstChunkReceived = true;
+            setIsLoading(false);
+          }
+          
           // Progressive text append as chunks arrive
           accumulatedSummary += chunk;
-          setSummary((prev) => prev + chunk);
+          setStreamingText(accumulatedSummary);
         },
         () => {
           // On completion - cache the accumulated summary
           setIsLoading(false);
           setIsGenerating(false);
+          setSummary(accumulatedSummary);
+          setStreamingText('');
           generatingRef.current = false;
 
           // Cache the completed summary
@@ -116,6 +129,7 @@ export default function SummaryTab({ pageId, content }: SummaryTabProps): React.
           setError(errorMessage);
           setIsLoading(false);
           setIsGenerating(false);
+          setStreamingText('');
           generatingRef.current = false;
         }
       );
@@ -123,6 +137,7 @@ export default function SummaryTab({ pageId, content }: SummaryTabProps): React.
       setError(err instanceof Error ? err.message : 'Failed to generate summary');
       setIsLoading(false);
       setIsGenerating(false);
+      setStreamingText('');
       generatingRef.current = false;
     }
   };
@@ -158,32 +173,48 @@ export default function SummaryTab({ pageId, content }: SummaryTabProps): React.
   // Show loading spinner
   if (isLoading && !summary) {
     return (
-      <div className={styles.loading}>
-        <div className={styles.loadingSpinner} />
-        <span>Generating summary...</span>
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingContent}>
+          <div className={styles.loadingSpinner} />
+          <div className={styles.loadingText}>
+            <div className={styles.loadingTitle}>Generating AI Summary</div>
+            <div className={styles.loadingSubtitle}>This may take a few moments...</div>
+          </div>
+        </div>
       </div>
     );
   }
 
   // Show summary content
   return (
-    <div role="tabpanel" id="summary-panel" aria-labelledby="summary-tab">
-      {summary && (
-        <div className={styles.summaryContent}>
-          {isCached && (
-            <div className={styles.cacheIndicator} title="This summary was loaded from cache">
-              💾 Cached
+    <div role="tabpanel" id="summary-panel" aria-labelledby="summary-tab" className={styles.summaryPanel}>
+      {(summary || streamingText) && (
+        <>
+          <div className={styles.summaryHeader}>
+            <h3 className={styles.summaryTitle}>
+              <span className={styles.summaryIcon}>✨</span>
+              AI-Generated Summary
+            </h3>
+            {isCached && !isGenerating && (
+              <div className={styles.cacheIndicator} title="Loaded from cache - no API call made">
+                <span className={styles.cacheIcon}>💾</span> Cached
+              </div>
+            )}
+            {isGenerating && (
+              <div className={styles.streamingBadge}>
+                <span className={styles.streamingDot}></span>
+                Streaming...
+              </div>
+            )}
+          </div>
+          <div className={styles.summaryContent} ref={summaryContainerRef}>
+            <div className={styles.summaryText}>
+              {isGenerating ? streamingText : summary}
+              {isGenerating && <span className={styles.cursor}>|</span>}
             </div>
-          )}
-          <p style={{ whiteSpace: 'pre-wrap' }}>{summary}</p>
-          <div ref={summaryEndRef} />
-        </div>
-      )}
-      {isGenerating && (
-        <div className={styles.loading}>
-          <div className={styles.loadingSpinner} />
-          <span>Streaming...</span>
-        </div>
+            <div ref={summaryEndRef} />
+          </div>
+        </>
       )}
     </div>
   );

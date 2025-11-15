@@ -20,6 +20,8 @@ export async function fetchSummary(
   onComplete: () => void,
   onError: (error: string) => void
 ): Promise<void> {
+  let timeoutId: NodeJS.Timeout | null = null;
+
   try {
     const apiUrl = process.env.NODE_ENV === 'production' 
       ? '/api/v1/summarize' 
@@ -32,12 +34,21 @@ export async function fetchSummary(
 
     const es = new EventSource(url.toString());
 
+    // Cleanup function
+    const cleanup = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      es.close();
+    };
+
     es.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
 
         if (data.error) {
-          es.close();
+          cleanup();
           onError(data.error);
           return;
         }
@@ -47,33 +58,32 @@ export async function fetchSummary(
         }
 
         if (data.done) {
-          es.close();
+          cleanup();
           onComplete();
         }
       } catch (err) {
         console.error('Error parsing SSE data:', err);
-        es.close();
+        cleanup();
         onError('Failed to parse server response');
       }
     };
 
     es.onerror = (error) => {
       console.error('EventSource error:', error);
-      es.close();
+      cleanup();
       onError('Connection error. Please try again.');
     };
 
     // Timeout after 30 seconds
-    const timeout = setTimeout(() => {
-      es.close();
+    timeoutId = setTimeout(() => {
+      cleanup();
       onError('Request timeout. Please try again.');
     }, 30000);
 
-    // Cleanup timeout on close
-    es.addEventListener('close', () => {
-      clearTimeout(timeout);
-    });
   } catch (error) {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
     console.error('Fetch summary error:', error);
     onError(error instanceof Error ? error.message : 'Unknown error occurred');
   }
