@@ -22,23 +22,36 @@ yarn-error.log*
 nul
 .trees/
 
-# Python (for API backend)
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
+*.py[cod]
+*$py.class
 *.so
-*.egg
-*.egg-info/
+.Python
+
+# Builds / Distributions
 dist/
 build/
+*.egg
+*.egg-info/
+
+# Virtual Environments
 .venv/
 venv/
 ENV/
 env/
+
+# Python Tools
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Env files
 .env
 .env.*
 *.log
