@@ -66,8 +66,8 @@ cognitive_load:
 
 teaching_approach: "Hands-on discovery through deliberate error recovery (Execute → Observe Error → Understand Recovery → Apply to Staging)"
 modality: "Discovery-based error recovery (varying from Lesson 1's basic execution) ✓"
-stage: "1 (Manual Foundation - NO AI assistance for Git operations)"
-ai_involvement: "None for Git execution (Stage 1 requirement)"
+# stage: "1 (Manual Foundation - NO AI assistance for Git operations)" # Internal scaffolding - hidden from students
+# ai_involvement: "None for Git execution (Stage 1 requirement)" # Internal scaffolding - hidden from students
 
 # Generation metadata
 generated_by: "content-implementer v1.0.0"
@@ -205,6 +205,9 @@ index abc1234..def5678 100644
 
 **What You Learned**: `git diff` shows you exactly what changed since the last commit. No more guessing—you can see every addition and deletion.
 
+#### 💬 AI Colearning Prompt
+> "Explain how `git diff` output uses `+` and `-` symbols to show changes, and why seeing changes before committing prevents mistakes."
+
 **Validation Checkpoint**: Can you identify which lines are new additions? (The lines with `+` prefix)
 
 ---
@@ -250,8 +253,6 @@ ALLCAPS AND CONFUSING TEXT
 ```
 
 **Discovery Question**: "Oh no! I broke the file. How do I get back to the version that worked?"
-
-**Note**: This is the error scenario students face when AI generates buggy code—the file is broken, and you need to instantly recover.
 
 ### Activity 4: View All Changes Including the Mistake
 
@@ -329,6 +330,9 @@ nothing to commit, working tree clean
 
 **What You Learned**: `git restore` is your **instant undo** for unstaged changes. It's non-destructive (the file still exists, you're just reverting to the last saved version).
 
+#### 🎓 Expert Insight
+> In AI-native development, `git restore` is your safety net when AI generates broken code. You don't need to manually revert changes—Git instantly recovers the working version. This enables fearless experimentation.
+
 **Key Insight**: Unlike closing a document without saving in a word processor, `git restore` recovers the working version from your last commit. This is incredibly powerful—you can edit fearlessly knowing you can always go back.
 
 ---
@@ -400,6 +404,12 @@ cat notes.txt
 **Observe**: The file contents are **exactly as you left them**. Nothing was lost.
 
 **What You Learned**: `git reset HEAD <file>` unstages files without deleting them. The file returns to "untracked" or "modified" status, but it's still there. This is **non-destructive undo** for the staging area.
+
+#### 🤝 Practice Exercise
+
+> **Ask your AI**: "Create a Git scenario where I accidentally stage 5 files but only want to commit 3 of them. Show me how to unstage the 2 unwanted files, then explain the difference between unstaging and deleting."
+
+**Expected Outcome**: You'll understand that `git reset HEAD` only changes staging status—files remain unchanged in your working directory.
 
 ---
 

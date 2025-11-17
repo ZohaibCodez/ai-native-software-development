@@ -79,8 +79,8 @@ cognitive_load:
 
 teaching_approach: "Hands-on discovery (Execute → Observe → Understand → Apply)"
 modality: "Discovery-based (varying from Chapter 7 direct teaching) ✓"
-stage: "1 (Manual Foundation - NO AI assistance for Git operations)"
-ai_involvement: "None for Git execution (Stage 1 requirement)"
+# stage: "1 (Manual Foundation - NO AI assistance for Git operations)" # Internal scaffolding - hidden from students
+# ai_involvement: "None for Git execution (Stage 1 requirement)" # Internal scaffolding - hidden from students
 
 # Generation metadata
 generated_by: "content-implementer v1.0.0"
@@ -230,6 +230,9 @@ drwxrwxrwt  39 root   wheel  1248 Nov 17 14:48 ..
 drwxr-xr-x@  9 user   wheel   288 Nov 17 14:48 .git
 ```
 
+#### 💬 AI Colearning Prompt
+> "Explain what the `.git` directory contains and how Git uses it to track changes."
+
 **Discovery Question**: "What does the `.git` folder represent?"
 
 **Answer**: It's Git's repository database. Everything Git tracks—your entire project history—lives in that folder. Delete `.git` and you lose all your save points. Keep it safe.
@@ -287,6 +290,9 @@ nothing added to commit but untracked files present (use "git add" to track)
 | `No commits yet` | You haven't created any save points yet |
 | `Untracked files:` | Git sees these files, but hasn't started protecting them |
 | `README.md, hello.txt` | The files Git found but isn't protecting |
+
+#### 🎓 Expert Insight
+> In AI-native development, you don't memorize Git status codes—you understand the concept of "tracking" as Git's commitment to protect files. AI can explain status output, but you need to recognize when files need protection.
 
 **Discovery Question**: "What does 'untracked' mean?"
 
@@ -363,6 +369,12 @@ Changes to be committed:
         new file:   README.md
         new file:   hello.txt
 ```
+
+#### 🤝 Practice Exercise
+
+> **Ask your AI**: "Create a Git scenario where I have 3 files: one for production code, one for test data, and one with personal notes. Then explain which files I should stage and why selective staging matters."
+
+**Expected Outcome**: You'll understand that staging gives you control over what gets committed, enabling you to separate production code from temporary files.
 
 **Discovery Question**: "Why would you stage some files but not others?"
 

@@ -17,7 +17,7 @@ skills:
     proficiency: A1
   branch-merging:
     proficiency: A1
-stage: 2 (AI Collaboration with Three Roles)
+# stage: 2 (AI Collaboration with Three Roles) # Internal scaffolding - hidden from students
 teaching_modality: Three Roles demonstrations (AI as Teacher, Student as Teacher, Co-Worker convergence)
 generated_by: content-implementer v1.0.0
 source_spec: specs/028-chapter-8-git-redesign/spec.md
@@ -87,6 +87,9 @@ git branch
 ```
 
 The asterisk (*) shows you're currently on `main`. The branch `feature-simple` exists but is waiting for you to switch to it.
+
+#### 💬 AI Colearning Prompt
+> "Explain what happens when I create a new Git branch. Does it copy my files, or does something else happen?"
 
 **Discovery question**: "What if I switch to this new branch? Will my main code be protected?"
 
@@ -167,6 +170,9 @@ ls
 ```
 
 **Expected output:** `approach-simple.txt` disappears! It only exists on the `feature-simple` branch.
+
+#### 🎓 Expert Insight
+> In AI-native development, branches enable fearless experimentation with AI-generated code. You don't memorize merge commands—you understand that branches isolate changes so failures don't affect your main code.
 
 **This is branch isolation in action.** Your main branch is completely untouched. If this feature is terrible, you can simply delete the `feature-simple` branch and never merge it. Main code stays safe.
 
@@ -280,6 +286,12 @@ Together you arrive at:
 - You didn't think of documenting performance in the commit message initially
 - AI didn't know this was important without your feedback
 - Together, you created a reusable pattern: **Document performance metrics in both commit and PR**
+
+#### 🤝 Practice Exercise
+
+> **Ask your AI**: "I'm testing two different database query approaches on separate Git branches. One is faster but uses more memory. Show me how to document this tradeoff in my commit messages and explain why this documentation matters for future decisions."
+
+**Expected Outcome**: You'll understand how to use Git commit messages to capture decision rationale, not just code changes.
 
 **Key moment:** This is Co-Worker convergence—iteration improved both of your understanding. Future projects will use this pattern.
 

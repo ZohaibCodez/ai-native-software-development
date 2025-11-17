@@ -3,8 +3,8 @@ sidebar_position: 6
 title: "Reusable Git Patterns - Creating Your Workflow Skill"
 description: "Synthesize recurring Git patterns into a personal workflow documentation guide"
 duration_minutes: 60
-stage: 3
-stage_label: "Intelligence Design"
+# stage: 3 # Internal scaffolding - hidden from students
+# stage_label: "Intelligence Design" # Internal scaffolding - hidden from students
 
 # HIDDEN SKILLS METADATA
 skills:
@@ -128,6 +128,9 @@ These aren't obscure Git techniques. These are the **three fundamental patterns 
 3. **Push-for-Backup**: "I backup to cloud regularly to prevent catastrophic loss"
 
 Every professional Git user follows these patterns. The fact that you've naturally learned them means you're thinking like a professional developer.
+
+#### 🎓 Expert Insight
+> In AI-native development, you don't memorize Git commands as isolated facts. You recognize that certain patterns recur across projects: "commit before risky changes," "test alternatives on branches," "backup regularly." The professional move is documenting these patterns so future you (and teammates) apply them automatically. This is what transforms learning into intelligence—making tacit knowledge explicit and reusable.
 
 ---
 
@@ -348,6 +351,9 @@ When facing a Git decision:
 
 **Copy this template and fill it in your own words.** The best reference guide is one written in your own language, reflecting your understanding.
 
+#### 💬 AI Colearning Prompt
+> "Explain why documenting Git patterns is more useful than memorizing commands. How does pattern-based thinking help with AI-assisted development?"
+
 ---
 
 ## Part 3: Apply Pattern to New Scenario (10 minutes)
@@ -447,6 +453,12 @@ You've completed **Stage 3 (Intelligence Design)** by:
 3. **Applying to novel context** using only your documentation (proving the documentation is sufficient)
 
 This is the core of **reusable intelligence**: capturing lessons learned so you never have to relearn them.
+
+#### 🤝 Practice Exercise
+
+> **Ask your AI**: "Review my git-workflow.md documentation and suggest what error recovery scenarios I should add. Then explain how having documented patterns helps me work faster with AI-generated code."
+
+**Expected Outcome**: You'll understand that workflow documentation reduces cognitive load when working under pressure, allowing you to focus on code quality instead of remembering Git commands.
 
 ---
 
@@ -557,11 +569,5 @@ Your workflow documentation grows with your experience.
 **Next**: In Lesson 7 (Capstone), you'll use this `git-workflow.md` alongside spec-first development to manage a complete multi-file AI-generated project.
 
 The patterns you've documented will be your safety net throughout the rest of Part 2 and beyond.
-
----
-
-#### 🎓 Expert Insight
-
-> In AI-native development, you don't memorize Git commands as isolated facts. You recognize that certain patterns recur across projects: "commit before risky changes," "test alternatives on branches," "backup regularly." The professional move is documenting these patterns so future you (and teammates) apply them automatically. This is what transforms learning into intelligence—making tacit knowledge explicit and reusable.
 
 ---
