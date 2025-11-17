@@ -1,0 +1,316 @@
+openapi: 3.0.3
+info:
+  title: Personalization API
+  description: API for generating personalized educational content based on user proficiency levels
+  version: 1.0.0
+  contact:
+    name: AI Native Software Development
+    
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local development server
+  - url: /api/v1
+    description: Production (relative path)
+
+paths:
+  /auth/dummy-login-with-profile:
+    post:
+      summary: Dummy login with user profiling
+      description: |
+        Authenticate user and collect proficiency profile (name, email, programming experience, AI proficiency).
+        This is a dummy implementation - future versions will use SSO (Clerk).
+      operationId: dummyLoginWithProfile
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileLoginRequest'
+            examples:
+              noviceUser:
+                summary: Novice programmer, novice AI user
+                value:
+                  name: "Jane Doe"
+                  email: "jane@example.com"
+                  programmingExperience: "Novice"
+                  aiProficiency: "Novice"
+              expertUser:
+                summary: Expert programmer, expert AI user
+                value:
+                  name: "John Expert"
+                  email: "john@example.com"
+                  programmingExperience: "Expert"
+                  aiProficiency: "Expert"
+      responses:
+        '200':
+          description: Login successful, returns token and user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthWithProfileResponse'
+              examples:
+                success:
+                  value:
+                    token: "dummy_token_abc123xyz"
+                    expires: "session"
+                    user:
+                      name: "Jane Doe"
+                      email: "jane@example.com"
+                      programmingExperience: "Novice"
+                      aiProficiency: "Novice"
+        '400':
+          description: Invalid request (missing/invalid fields)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingField:
+                  value:
+                    error: "Validation Error"
+                    message: "Missing required field: programmingExperience"
+                invalidEmail:
+                  value:
+                    error: "Validation Error"
+                    message: "Invalid email format"
+
+  /personalize:
+    get:
+      summary: Generate personalized content (SSE streaming)
+      description: |
+        Generate AI-personalized content based on user's programming experience and AI proficiency.
+        Uses Server-Sent Events (SSE) for streaming response.
+        Requires valid authentication token from login.
+        
+        Uses separate OpenAI Agent instance (Content Personalizer) with proficiency-based instructions.
+      operationId: personalizeContent
+      tags:
+        - Personalization
+      parameters:
+        - name: pageId
+          in: query
+          required: true
+          description: Unique identifier for the content page
+          schema:
+            type: string
+            minLength: 1
+          example: "intro-to-ai-agents"
+        - name: content
+          in: query
+          required: true
+          description: Full page content text to personalize
+          schema:
+            type: string
+            minLength: 100
+            maxLength: 50000
+          example: "AI agents are autonomous systems that can..."
+        - name: token
+          in: query
+          required: true
+          description: Authentication token from login
+          schema:
+            type: string
+            minLength: 1
+          example: "dummy_token_abc123"
+        - name: programmingLevel
+          in: query
+          required: true
+          description: User's programming proficiency level
+          schema:
+            $ref: '#/components/schemas/ProficiencyLevel'
+          example: "Intermediate"
+        - name: aiLevel
+          in: query
+          required: true
+          description: User's AI proficiency level
+          schema:
+            $ref: '#/components/schemas/ProficiencyLevel'
+          example: "Beginner"
+      responses:
+        '200':
+          description: SSE stream of personalized content chunks
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: |
+                  Server-Sent Events stream. Each event contains JSON with chunk/done/error fields.
+              examples:
+                streamingChunks:
+                  summary: Streaming personalized content
+                  value: |
+                    data: {"chunk": "For someone with intermediate programming skills", "done": false, "error": null}
+                    
+                    data: {"chunk": " and beginner AI knowledge, let's explore AI agents.", "done": false, "error": null}
+                    
+                    data: {"chunk": "", "done": true, "error": null}
+                streamingError:
+                  summary: Streaming fails mid-generation
+                  value: |
+                    data: {"chunk": "For someone with intermediate", "done": false, "error": null}
+                    
+                    data: {"chunk": "", "done": true, "error": "Generation failed: API timeout"}
+        '401':
+          description: Authentication required (missing/invalid token)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                noToken:
+                  value:
+                    error: "Authentication Error"
+                    message: "Missing or invalid authentication token"
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                contentTooShort:
+                  value:
+                    error: "Validation Error"
+                    message: "Content too short to personalize (minimum 100 characters)"
+                invalidLevel:
+                  value:
+                    error: "Validation Error"
+                    message: "Invalid proficiency level. Must be one of: Novice, Beginner, Intermediate, Expert"
+
+  /health:
+    get:
+      summary: Health check endpoint
+      description: Verify API is running
+      operationId: healthCheck
+      tags:
+        - System
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  service:
+                    type: string
+                    example: "personalization-api"
+
+components:
+  schemas:
+    ProficiencyLevel:
+      type: string
+      enum:
+        - Novice
+        - Beginner
+        - Intermediate
+        - Expert
+      description: User proficiency level for programming or AI knowledge
+
+    ProfileLoginRequest:
+      type: object
+      required:
+        - name
+        - email
+        - programmingExperience
+        - aiProficiency
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: User's display name
+          example: "Jane Doe"
+        email:
+          type: string
+          format: email
+          description: User's email address
+          example: "jane@example.com"
+        programmingExperience:
+          $ref: '#/components/schemas/ProficiencyLevel'
+        aiProficiency:
+          $ref: '#/components/schemas/ProficiencyLevel'
+
+    AuthWithProfileResponse:
+      type: object
+      required:
+        - token
+        - expires
+        - user
+      properties:
+        token:
+          type: string
+          description: Dummy authentication token
+          example: "dummy_token_abc123xyz"
+        expires:
+          type: string
+          description: Token expiration indicator
+          example: "session"
+        user:
+          type: object
+          description: User profile information
+          required:
+            - name
+            - email
+            - programmingExperience
+            - aiProficiency
+          properties:
+            name:
+              type: string
+              example: "Jane Doe"
+            email:
+              type: string
+              format: email
+              example: "jane@example.com"
+            programmingExperience:
+              $ref: '#/components/schemas/ProficiencyLevel'
+            aiProficiency:
+              $ref: '#/components/schemas/ProficiencyLevel'
+
+    PersonalizationChunk:
+      type: object
+      required:
+        - chunk
+        - done
+      properties:
+        chunk:
+          type: string
+          description: Partial personalized content text
+          example: "For someone with intermediate programming skills"
+        done:
+          type: boolean
+          description: True when streaming is complete
+          example: false
+        error:
+          type: string
+          nullable: true
+          description: Error message if generation failed, null otherwise
+          example: null
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error type
+          example: "Validation Error"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Missing required field: programmingExperience"
+
+tags:
+  - name: Authentication
+    description: User authentication and profiling endpoints
+  - name: Personalization
+    description: Personalized content generation endpoints
+  - name: System
+    description: System health and status endpoints

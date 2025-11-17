@@ -1,15 +1,16 @@
 /**
  * Authentication Service - manages user authentication state
  * 
- * Uses sessionStorage to persist authentication tokens across page navigations
- * during a browser session.
+ * Uses sessionStorage to persist authentication tokens and user profiles
+ * across page navigations during a browser session.
  */
 
-import { AuthState } from '../types/contentTabs';
+import { AuthState, AuthSession, UserProfile } from '../types/contentTabs';
 import * as cacheService from './cacheService';
 
 const AUTH_TOKEN_KEY = 'authToken';
 const AUTH_EXPIRY_KEY = 'authExpiry';
+const AUTH_SESSION_KEY = 'authSession'; // T017: New composite session key
 
 /**
  * Check if user is currently authenticated
@@ -74,4 +75,89 @@ export function getAuthState(): AuthState {
     token,
     expiresAt,
   };
+}
+
+// T017-T022: Enhanced authentication with user profiles
+
+/**
+ * Save authentication session with user profile
+ * @param token - Authentication token
+ * @param profile - User profile with proficiency levels
+ */
+export function saveSession(token: string, profile: UserProfile): void {
+  const session: AuthSession = {
+    token,
+    profile,
+    expiresAt: undefined, // Future: Set actual expiration
+  };
+  
+  cacheService.set(AUTH_SESSION_KEY, session);
+  
+  // Also save token separately for backward compatibility
+  setToken(token);
+}
+
+/**
+ * Get authentication session with profile
+ * @returns AuthSession object or null if not authenticated
+ */
+export function getSession(): AuthSession | null {
+  return cacheService.get<AuthSession>(AUTH_SESSION_KEY);
+}
+
+/**
+ * Get user profile from current session
+ * @returns UserProfile or null if no session exists
+ */
+export function getProfile(): UserProfile | null {
+  const session = getSession();
+  return session?.profile ?? null;
+}
+
+/**
+ * Generate profile fingerprint for cache keys
+ * 
+ * T110: Cache Key Format Documentation
+ * 
+ * Profile fingerprints are used to create unique cache keys for personalized content,
+ * ensuring different proficiency levels get different cached content.
+ * 
+ * Format: "{ProgrammingLevel}-{AILevel}"
+ * 
+ * Examples:
+ * - "Novice-Novice" - Beginner programmer, new to AI
+ * - "Intermediate-Beginner" - Experienced programmer, AI basics
+ * - "Expert-Expert" - Senior developer, advanced AI knowledge
+ * 
+ * Cache Key Pattern:
+ * - Summary: "summary_{pageId}" (profile-independent)
+ * - Personalization: "personalized_{pageId}_{fingerprint}" (profile-specific)
+ * 
+ * Example Cache Keys:
+ * - "personalized_intro_Novice-Beginner"
+ * - "personalized_chapter1_Expert-Intermediate"
+ * - "personalized_preface-agent-native_Intermediate-Expert"
+ * 
+ * This ensures:
+ * 1. Same user, same page, same profile → cache hit
+ * 2. Same user, same page, different profile → cache miss (regenerate)
+ * 3. Different users with same profile, same page → cache hit (shared)
+ * 
+ * @param profile - User profile with programmingExperience and aiProficiency
+ * @returns Fingerprint string in format "ProgrammingLevel-AILevel"
+ */
+export function generateProfileFingerprint(profile: UserProfile): string {
+  return `${profile.programmingExperience}-${profile.aiProficiency}`;
+}
+
+/**
+ * Check if user session is expired
+ * @returns true if session has expired
+ */
+export function isSessionExpired(): boolean {
+  const session = getSession();
+  if (!session || !session.expiresAt) {
+    return false; // No expiration set means session-based (no expiry)
+  }
+  return Date.now() > session.expiresAt;
 }
