@@ -115,15 +115,15 @@ description: "Implementation tasks for Chapter 6 Redesign - Gemini CLI"
 
 **Independent Test**: Student creates project .env file and explains config precedence order
 
-- [ ] T042 [US1] Read existing lesson at book-source/docs/02-AI-Tool-Landscape/06-gemini-cli-installation-and-basics/05-configuration.md
-- [ ] T043 [US1] Add CEFR level metadata (A2 Beginner) to lesson frontmatter
-- [ ] T044 [US1] Add 5 learning objectives with Bloom's taxonomy levels to frontmatter
-- [ ] T045 [US1] Map all learning objectives to DigComp 2.2 competency areas in frontmatter
-- [ ] T046 [US1] Add Stage 2 (AI Collaboration) tag to lesson metadata
-- [ ] T047 [US1] Strengthen security best practices section: API keys in env vars, .gitignore examples (FR-026)
-- [ ] T048 [US1] Add visual diagram of 7-level hierarchy: CLI flags → project settings → global → defaults
-- [ ] T049 [US1] Include complete .env file example with comments explaining each variable
-- [ ] T050 [US1] Ensure "Try With AI" section uses preferred tool instruction
+- [X] T042 [US1] Read existing lesson at book-source/docs/02-AI-Tool-Landscape/06-gemini-cli-installation-and-basics/05-configuration.md
+- [X] T043 [US1] Add CEFR level metadata (A2 Beginner) to lesson frontmatter
+- [X] T044 [US1] Add 5 learning objectives with Bloom's taxonomy levels to frontmatter
+- [X] T045 [US1] Map all learning objectives to DigComp 2.2 competency areas in frontmatter
+- [X] T046 [US1] Add Stage 2 (AI Collaboration) tag to lesson metadata
+- [X] T047 [US1] Strengthen security best practices section: API keys in env vars, .gitignore examples (FR-026)
+- [X] T048 [US1] Add visual diagram of 7-level hierarchy: CLI flags → project settings → global → defaults
+- [X] T049 [US1] Include complete .env file example with comments explaining each variable
+- [X] T050 [US1] Ensure "Try With AI" section uses preferred tool instruction
 
 **Checkpoint**: Lesson 5 has complete metadata, security guidance strengthened, config hierarchy clear
 
