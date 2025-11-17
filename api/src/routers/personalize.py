@@ -46,41 +46,62 @@ async def personalize_content(
         HTTPException 401: If token is missing or invalid
         HTTPException 400: If content is too short or proficiency levels are invalid
     """
-    logger.info(f"Personalization request for pageId: {pageId}, Programming: {programmingLevel}, AI: {aiLevel}")
+    # T103: Enhanced request logging for debugging
+    token_prefix = token[:20] if token else "None"
+    logger.info(
+        f"Personalization request - pageId: {pageId}, "
+        f"Programming: {programmingLevel}, AI: {aiLevel}, "
+        f"Token: {token_prefix}..., Content length: {len(content)} chars"
+    )
     
     # T045: Token validation
     if not token:
-        logger.warning("Personalization request missing token")
+        logger.warning(f"Personalization request missing token for pageId: {pageId}")
         raise HTTPException(status_code=401, detail="Authentication token required")
     
     if not token.startswith("dummy_token"):
-        logger.warning(f"Invalid token format: {token[:20]}...")
+        logger.warning(f"Invalid token format for pageId {pageId}: {token[:20]}...")
         raise HTTPException(status_code=401, detail="Invalid authentication token")
     
-    # T046: Content validation (minimum 100 characters)
+    # T105: Content length validation (reject if >50,000 chars per API contract)
     if len(content) < 100:
-        logger.warning(f"Content too short: {len(content)} characters")
+        logger.warning(f"Content too short for pageId {pageId}: {len(content)} characters")
         raise HTTPException(
             status_code=400,
             detail="Content must be at least 100 characters for personalization"
+        )
+    
+    if len(content) > 50000:
+        logger.warning(f"Content too long for pageId {pageId}: {len(content)} characters")
+        raise HTTPException(
+            status_code=400,
+            detail="Content must not exceed 50,000 characters for personalization"
         )
     
     # T047: Validate proficiency levels
     valid_levels = ["Novice", "Beginner", "Intermediate", "Expert"]
     
     if programmingLevel not in valid_levels:
-        logger.warning(f"Invalid programming level: {programmingLevel}")
+        logger.warning(f"Invalid programming level for pageId {pageId}: {programmingLevel}")
         raise HTTPException(
             status_code=400,
             detail=f"Invalid programmingLevel. Must be one of: {', '.join(valid_levels)}"
         )
     
     if aiLevel not in valid_levels:
-        logger.warning(f"Invalid AI level: {aiLevel}")
+        logger.warning(f"Invalid AI level for pageId {pageId}: {aiLevel}")
         raise HTTPException(
             status_code=400,
             detail=f"Invalid aiLevel. Must be one of: {', '.join(valid_levels)}"
         )
+    
+    # T104: Rate limiting consideration
+    # TODO: Future enhancement - implement rate limiting strategy:
+    # - Option 1: FastAPI Limiter (https://github.com/long2ice/fastapi-limiter) with Redis backend
+    # - Option 2: slowapi (https://github.com/laurents/slowapi) for in-memory rate limiting
+    # - Suggested limits: 10 requests/minute per user, 100 requests/hour per user
+    # - Track by token or IP address
+    # - Return 429 (Too Many Requests) when limit exceeded
     
     # T048: Define event stream generator
     async def event_stream():

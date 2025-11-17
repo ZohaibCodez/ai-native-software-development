@@ -4,6 +4,49 @@
  * Displays AI-personalized content tailored to user's proficiency levels
  * with SSE streaming support. Mirrors SummaryTab pattern with login button
  * integration and profile-based personalization.
+ * 
+ * T109: State Machine Documentation
+ * 
+ * State Flow:
+ * 1. IDLE (initial) → Component mounts
+ * 2. CHECKING_AUTH → Check if user authenticated
+ *    - If NOT authenticated → LOGIN_REQUIRED (show login button)
+ *    - If authenticated → CHECKING_CACHE
+ * 3. CHECKING_CACHE → Check sessionStorage for cached content
+ *    - Check session expiration first
+ *    - If expired → ERROR (show expiration message)
+ *    - If cache hit → CACHE_HIT (display cached content instantly)
+ *    - If cache miss → READY (show generate button)
+ * 4. READY → User clicks "Generate Personalized Content"
+ *    - Validate session not expired
+ *    - Validate session not cleared (T095)
+ *    - Apply debounce guard (T097)
+ * 5. LOADING → Initial API request setup
+ *    - Disable generate button
+ *    - Show loading spinner
+ * 6. STREAMING → Receiving SSE chunks
+ *    - Display streaming indicator with ARIA live region (T100)
+ *    - Append chunks progressively
+ *    - Auto-scroll to bottom
+ * 7. SUCCESS → Stream completed
+ *    - Save to cache with profile fingerprint
+ *    - Show regenerate button
+ *    - Display cache indicator on reload
+ * 8. ERROR → Stream failed
+ *    - Preserve partial content (FR-015a)
+ *    - Show error message with retry button
+ *    - If session expired → redirect to login (T093)
+ *    - If session cleared → show login button (T095)
+ * 
+ * State Transitions Summary:
+ * - IDLE → CHECKING_AUTH (on mount)
+ * - CHECKING_AUTH → LOGIN_REQUIRED | CHECKING_CACHE
+ * - CHECKING_CACHE → ERROR | CACHE_HIT | READY
+ * - READY → LOADING (on generate click)
+ * - LOADING → STREAMING (first chunk received)
+ * - STREAMING → SUCCESS | ERROR
+ * - SUCCESS → READY (on regenerate click)
+ * - ERROR → READY (on retry click)
  */
 import React, { useState, useEffect, useRef } from "react";
 import { useHistory, useLocation } from "@docusaurus/router";
@@ -38,6 +81,7 @@ export default function PersonalizationTab({
   const contentEndRef = useRef<HTMLDivElement>(null);
   const generatingRef = useRef(false);
   const contentContainerRef = useRef<HTMLDivElement>(null);
+  const lastClickTimeRef = useRef<number>(0); // T097: Debouncing
 
   // T060: Check authentication and load profile
   useEffect(() => {
@@ -64,6 +108,14 @@ export default function PersonalizationTab({
 
   // T062: Check cache then generate if needed
   const checkCacheAndGenerate = async (profile: UserProfile) => {
+    // T090: Check session expiration before generation
+    if (authService.isSessionExpired()) {
+      // T091: Show non-intrusive notification
+      setError("Session expired. Please login to generate new content.");
+      // T092: Don't clear existing content - allow viewing cached/displayed content
+      return;
+    }
+
     const fingerprint = authService.generateProfileFingerprint(profile);
     const cacheKey = `personalized_${pageId}_${fingerprint}`;
     const cached = cacheService.get<PersonalizationCacheEntry>(cacheKey);
@@ -89,9 +141,27 @@ export default function PersonalizationTab({
 
   // T063: Generate personalized content with streaming
   const generatePersonalizedContent = async (profile: UserProfile) => {
+    // T090-T093: Check session expiration and require re-login
+    if (authService.isSessionExpired()) {
+      setError("Session expired. Redirecting to login...");
+      setTimeout(() => {
+        const returnTo = encodeURIComponent(location.pathname);
+        history.push(`/login?returnTo=${returnTo}`);
+      }, 1500);
+      return;
+    }
+
     const token = authService.getToken();
     if (!token) {
       setError("Authentication required");
+      return;
+    }
+
+    // T095: Handle edge case - sessionStorage cleared during generation
+    const session = authService.getSession();
+    if (!session || !session.profile) {
+      setError("Session lost. Please login again.");
+      setIsAuthenticated(false);
       return;
     }
 
@@ -176,6 +246,13 @@ export default function PersonalizationTab({
 
   // T067: Handle regenerate button click
   const handleRegenerate = () => {
+    // T097: Debounce to prevent accidental double-clicks (500ms)
+    const now = Date.now();
+    if (now - lastClickTimeRef.current < 500) {
+      return; // Ignore click if within 500ms of last click
+    }
+    lastClickTimeRef.current = now;
+
     if (userProfile) {
       setIsCached(false);
       generatePersonalizedContent(userProfile);
@@ -225,6 +302,8 @@ export default function PersonalizationTab({
             className={styles.generateButton}
             onClick={() => userProfile && generatePersonalizedContent(userProfile)}
             disabled={!userProfile}
+            aria-label="Generate personalized content based on your proficiency level"
+            aria-busy={isGenerating}
           >
             Generate Personalized Content
           </button>
@@ -258,7 +337,11 @@ export default function PersonalizationTab({
 
           {/* Streaming indicator */}
           {isGenerating && (
-            <div className={styles.streamingIndicator}>
+            <div 
+              className={styles.streamingIndicator}
+              role="status"
+              aria-live="polite"
+            >
               ✨ Generating personalized content...
             </div>
           )}
@@ -280,6 +363,7 @@ export default function PersonalizationTab({
               <button
                 className={styles.regenerateButton}
                 onClick={handleRegenerate}
+                aria-label="Regenerate personalized content with fresh AI response"
               >
                 🔄 Regenerate
               </button>

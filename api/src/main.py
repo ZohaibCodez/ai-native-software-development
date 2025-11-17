@@ -37,8 +37,28 @@ app.add_middleware(
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
-    return {"status": "healthy", "service": "content-summarization-api"}
+    """
+    Health check endpoint
+    
+    T106: Verifies API key is configured and service is ready
+    """
+    import os
+    
+    # Check if API key is configured
+    google_api_key = os.getenv("GOOGLE_API_KEY")
+    
+    if not google_api_key:
+        return {
+            "status": "unhealthy",
+            "service": "content-personalization-api",
+            "error": "GOOGLE_API_KEY not configured"
+        }, 500
+    
+    return {
+        "status": "healthy",
+        "service": "content-personalization-api",
+        "api_configured": True
+    }
 
 @app.get("/")
 async def root():

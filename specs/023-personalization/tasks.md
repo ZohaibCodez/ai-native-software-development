@@ -38,9 +38,9 @@
 
 **Purpose**: Initialize project structure and install dependencies
 
-- [ ] T001 Verify existing project structure matches plan.md (book-source/ frontend, api/ backend)
-- [ ] T002 Install frontend dependencies: React 19, TypeScript 5.6, Docusaurus 3.9.2 (verify package.json)
-- [ ] T003 Install backend dependencies: FastAPI, Pydantic, OpenAI Agents SDK (verify api/requirements.txt)
+- [x] T001 Verify existing project structure matches plan.md (book-source/ frontend, api/ backend)
+- [x] T002 Install frontend dependencies: React 19, TypeScript 5.6, Docusaurus 3.9.2 (verify package.json)
+- [x] T003 Install backend dependencies: FastAPI, Pydantic, OpenAI Agents SDK (verify api/requirements.txt)
 
 ---
 
@@ -222,8 +222,8 @@
 
 ### Session Expiration Handling (FR-006a, FR-006b, FR-006c)
 
-- [ ] T088 Implement session expiration detection in authService (check expiresAt if present)
-- [ ] T089 Add `authService.isSessionExpired()` function checking expiration timestamp
+- [x] T088 Implement session expiration detection in authService (check expiresAt if present)
+- [x] T089 Add `authService.isSessionExpired()` function checking expiration timestamp
 - [ ] T090 Update PersonalizationTab to check session expiration before generation requests
 - [ ] T091 Show non-intrusive notification on session expiration (e.g., toast: "Session expired. Please login to generate new content.")
 - [ ] T092 Allow viewing current cached/displayed content after expiration (don't clear display)
@@ -233,7 +233,7 @@
 
 - [ ] T094 Add error boundary component wrapping PersonalizationTab to catch React errors
 - [ ] T095 Handle edge case: User clears sessionStorage during generation (detect missing session, show login button)
-- [ ] T096 Handle edge case: Duplicate requests for same page/profile (use ref guard to prevent concurrent calls)
+- [x] T096 Handle edge case: Duplicate requests for same page/profile (use ref guard to prevent concurrent calls)
 - [ ] T097 Add request debouncing to generate button (prevent accidental double-clicks)
 
 ### UX Refinements
@@ -246,17 +246,17 @@
 
 ### Backend Validation & Logging
 
-- [ ] T103 Add request logging in /personalize endpoint (log pageId, proficiency levels, token prefix for debugging)
-- [ ] T104 Add rate limiting consideration (document future rate limit strategy in comments)
-- [ ] T105 Validate content length in /personalize endpoint (reject if >50,000 chars per API contract)
+- [x] T103 Add request logging in /personalize endpoint (log pageId, proficiency levels, token prefix for debugging)
+- [x] T104 Add rate limiting consideration (document future rate limit strategy in comments)
+- [x] T105 Validate content length in /personalize endpoint (reject if >50,000 chars per API contract)
 - [ ] T106 Add health check verification that OpenAI API key is configured (return 500 if missing)
 
 ### Documentation
 
 - [ ] T107 Update `quickstart.md` with final testing checklist based on implemented features
 - [ ] T108 Document environment variables needed: OPENAI_API_KEY or GOOGLE_API_KEY in api/.env
-- [ ] T109 Add inline code comments documenting state machine transitions in PersonalizationTab
-- [ ] T110 Document cache key format and fingerprint generation in code comments
+- [x] T109 Add inline code comments documenting state machine transitions in PersonalizationTab
+- [x] T110 Document cache key format and fingerprint generation in code comments
 
 ---
 

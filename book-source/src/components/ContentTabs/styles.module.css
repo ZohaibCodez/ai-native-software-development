@@ -783,4 +783,83 @@
   transform: translateY(-1px);
 }
 
+/* T094: Error Boundary Styles */
+
+.errorBoundary {
+  padding: 2rem;
+  text-align: center;
+  color: var(--ifm-color-emphasis-800);
+}
+
+.errorBoundary h3 {
+  color: var(--ifm-color-danger);
+  margin-bottom: 1rem;
+}
+
+.errorDetails {
+  margin-top: 1rem;
+  text-align: left;
+  background: var(--ifm-color-emphasis-100);
+  padding: 1rem;
+  border-radius: 4px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.errorDetails pre {
+  font-size: 0.75rem;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+
+/* T098: Loading Skeleton */
+
+.loadingSkeleton {
+  padding: 1.5rem;
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.skeletonLine {
+  height: 1rem;
+  background: linear-gradient(
+    90deg,
+    var(--ifm-color-emphasis-200) 25%,
+    var(--ifm-color-emphasis-300) 50%,
+    var(--ifm-color-emphasis-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
+
+.skeletonLine:nth-child(1) { width: 90%; }
+.skeletonLine:nth-child(2) { width: 95%; }
+.skeletonLine:nth-child(3) { width: 85%; }
+.skeletonLine:nth-child(4) { width: 92%; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* T099: Fade-in Animations */
+
+.fadeIn {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 

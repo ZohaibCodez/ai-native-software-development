@@ -10,6 +10,7 @@ import TabBar from './TabBar';
 import OriginalTab from './OriginalTab';
 import SummaryTab from './SummaryTab';
 import PersonalizationTab from './PersonalizationTab';
+import PersonalizationErrorBoundary from './PersonalizationErrorBoundary';
 import ErrorBoundary from './ErrorBoundary';
 import styles from './styles.module.css';
 
@@ -60,7 +61,9 @@ export default function ContentTabs({ children, pageId = '' }: ContentTabsProps)
           )}
           
           {activeTab === 'personalized' && (
-            <PersonalizationTab pageId={pageId} content={getContentAsString()} />
+            <PersonalizationErrorBoundary>
+              <PersonalizationTab pageId={pageId} content={getContentAsString()} />
+            </PersonalizationErrorBoundary>
           )}
         </div>
       </div>

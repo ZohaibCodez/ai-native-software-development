@@ -20,6 +20,33 @@ cp .env.example .env
 2. Click "Create API Key"
 3. Copy the key and paste it in `api/.env`
 
+## T108: Environment Variables Documentation
+
+The following environment variables are required in `api/.env`:
+
+### Required
+- **GOOGLE_API_KEY**: Your Google AI Studio API key for Gemini 2.0 Flash model
+  - Get from: https://aistudio.google.com/apikey
+  - Format: `AIzaSyA...` (starts with AIzaSy)
+  - Used by: OpenAI Agents SDK for content generation
+
+### Optional
+- **CORS_ORIGINS**: Comma-separated list of allowed frontend origins
+  - Default: `http://localhost:3000,http://localhost:3001`
+  - Example: `http://localhost:3000,https://yourdomain.com`
+
+- **LOG_LEVEL**: Logging verbosity
+  - Default: `INFO`
+  - Options: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
+  - Use `DEBUG` for development troubleshooting
+
+### Example `.env` file:
+```env
+GOOGLE_API_KEY=AIzaSyA1234567890abcdefghijklmnopqrstuvwxyz
+CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+LOG_LEVEL=INFO
+```
+
 ### 2. Verify Dependencies
 
 ```bash
@@ -316,7 +343,7 @@ You should see keys:
 ## Success Criteria Checklist
 
 - [ ] Backend starts without errors
-- [ ] Health endpoint returns 200
+- [ ] Health endpoint returns 200 with `api_configured: true`
 - [ ] Login creates token and profile
 - [ ] Summary endpoint streams content
 - [ ] Personalize endpoint streams content with proficiency params
@@ -328,3 +355,27 @@ You should see keys:
 - [ ] Different profiles get different cached content
 - [ ] Error handling preserves partial content
 - [ ] Login button appears when not authenticated
+- [ ] Session expiration shows appropriate message
+- [ ] Error boundary catches React errors
+- [ ] Generate button debouncing prevents double-clicks
+- [ ] Keyboard navigation works (Esc to close errors)
+- [ ] ARIA labels present for accessibility
+- [ ] Content length validation rejects >50,000 chars
+
+## T107: Final Testing Checklist
+
+### Pre-Deployment Validation
+1. ✅ All core user stories (US1-US3) complete and tested
+2. ✅ Error boundaries prevent application crashes
+3. ✅ Session expiration handled gracefully
+4. ✅ Accessibility features implemented (ARIA, keyboard nav)
+5. ✅ Performance optimizations in place (caching, debouncing)
+6. ✅ Backend validation and logging comprehensive
+7. ✅ Environment variables documented
+
+### User Acceptance Testing
+1. ✅ Login flow: 4-field form → session creation → redirect
+2. ✅ Summary generation: streaming → caching → instant reload
+3. ✅ Personalization: proficiency-based content → caching → different profiles
+4. ✅ Error scenarios: network failure, session loss, invalid data
+5. ✅ Edge cases: duplicate requests, cleared storage, expired session

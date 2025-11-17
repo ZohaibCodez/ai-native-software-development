@@ -116,7 +116,34 @@ export function getProfile(): UserProfile | null {
 
 /**
  * Generate profile fingerprint for cache keys
- * @param profile - User profile
+ * 
+ * T110: Cache Key Format Documentation
+ * 
+ * Profile fingerprints are used to create unique cache keys for personalized content,
+ * ensuring different proficiency levels get different cached content.
+ * 
+ * Format: "{ProgrammingLevel}-{AILevel}"
+ * 
+ * Examples:
+ * - "Novice-Novice" - Beginner programmer, new to AI
+ * - "Intermediate-Beginner" - Experienced programmer, AI basics
+ * - "Expert-Expert" - Senior developer, advanced AI knowledge
+ * 
+ * Cache Key Pattern:
+ * - Summary: "summary_{pageId}" (profile-independent)
+ * - Personalization: "personalized_{pageId}_{fingerprint}" (profile-specific)
+ * 
+ * Example Cache Keys:
+ * - "personalized_intro_Novice-Beginner"
+ * - "personalized_chapter1_Expert-Intermediate"
+ * - "personalized_preface-agent-native_Intermediate-Expert"
+ * 
+ * This ensures:
+ * 1. Same user, same page, same profile → cache hit
+ * 2. Same user, same page, different profile → cache miss (regenerate)
+ * 3. Different users with same profile, same page → cache hit (shared)
+ * 
+ * @param profile - User profile with programmingExperience and aiProficiency
  * @returns Fingerprint string in format "ProgrammingLevel-AILevel"
  */
 export function generateProfileFingerprint(profile: UserProfile): string {

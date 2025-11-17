@@ -7,7 +7,7 @@
  * - Programming Experience (Novice, Beginner, Intermediate, Expert)
  * - AI Proficiency (Novice, Beginner, Intermediate, Expert)
  */
-import React, { useState, FormEvent } from 'react';
+import React, { useState, useEffect, FormEvent } from 'react';
 import { useHistory, useLocation } from '@docusaurus/router';
 import { UserProfile, ProficiencyLevel } from '../../types/contentTabs';
 import * as authService from '../../services/authService';
@@ -38,6 +38,18 @@ export default function DummyLoginWithProfile(): React.ReactElement {
   // T030: Loading state
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // T101: Keyboard navigation - Esc to close error
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && submitError) {
+        setSubmitError(null);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [submitError]);
 
   // T026: Form validation
   const validateForm = (): boolean => {
