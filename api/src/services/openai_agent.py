@@ -222,42 +222,104 @@ def build_personalization_instructions(programming_level: str, ai_proficiency: s
     Returns:
         str: Tailored instructions for the agent
     """
-    # Base instruction
-    base = "You are an expert educational content personalizer. Your task is to adapt the provided content to match the user's experience level.\n\n"
     
-    # Programming experience adaptations
-    prog_instructions = {
-        "Novice": "Programming Experience (Novice): Explain fundamental programming concepts in simple terms. Avoid jargon. Use everyday analogies. Break down complex ideas into small steps. Assume no prior coding knowledge.",
-        "Beginner": "Programming Experience (Beginner): Explain programming concepts clearly with basic examples. Use simple code snippets when helpful. Assume familiarity with basic syntax but not advanced patterns.",
-        "Intermediate": "Programming Experience (Intermediate): Reference standard programming patterns and best practices. Use technical terminology appropriately. Assume comfort with common algorithms and data structures.",
-        "Expert": "Programming Experience (Expert): Focus on advanced techniques, performance optimizations, and architectural patterns. Skip basic explanations. Discuss trade-offs and edge cases."
+    # Define unified reader personas
+    personas = {
+        ("Novice", "Novice"): "a complete beginner to both programming and AI. Use very simple language and everyday analogies throughout. Explain all technical terms. Focus on 'what' and 'why' before 'how'.",
+        ("Novice", "Beginner"): "new to programming but has heard about AI tools. Keep programming explanations very simple with analogies, but you can mention AI tools and concepts directly without over-explaining them.",
+        ("Novice", "Intermediate"): "new to programming but comfortable with AI concepts. Simplify programming explanations heavily with analogies, while using proper AI terminology naturally (agents, prompts, models).",
+        ("Novice", "Expert"): "new to programming but an AI expert. Use beginner-friendly programming analogies while freely discussing advanced AI patterns, agent architectures, and prompt engineering.",
+        
+        ("Beginner", "Novice"): "has basic coding knowledge but new to AI. Use simple programming examples and syntax, but explain AI concepts from first principles (what agents are, how they help).",
+        ("Beginner", "Beginner"): "a beginner in both programming and AI. Use clear code examples and straightforward AI tool explanations. Balance simplicity with building understanding.",
+        ("Beginner", "Intermediate"): "a beginner programmer comfortable with AI tools. Keep programming examples simple, but reference AI frameworks and concepts naturally.",
+        ("Beginner", "Expert"): "a beginner programmer but an AI expert. Use basic programming explanations while discussing advanced AI agent patterns and architectures.",
+        
+        ("Intermediate", "Novice"): "an experienced programmer new to AI. Use standard programming terminology and patterns freely, but explain AI concepts from scratch.",
+        ("Intermediate", "Beginner"): "an experienced programmer learning AI. Reference programming best practices normally while explaining AI tools and concepts clearly.",
+        ("Intermediate", "Intermediate"): "experienced in both programming and AI. Use technical terminology naturally for both domains. Focus on practical integration.",
+        ("Intermediate", "Expert"): "an experienced programmer and AI expert. Use standard programming terminology while diving deep into AI agent orchestration and advanced patterns.",
+        
+        ("Expert", "Novice"): "a senior developer new to AI. Discuss architectural patterns and advanced programming freely, but introduce AI concepts from first principles.",
+        ("Expert", "Beginner"): "a senior developer learning AI. Use advanced programming terminology while explaining AI tools and workflows clearly.",
+        ("Expert", "Intermediate"): "a senior developer comfortable with AI. Discuss architecture, performance, and trade-offs naturally while referencing AI frameworks and patterns.",
+        ("Expert", "Expert"): "a senior developer and AI expert. Focus on advanced techniques, architectural decisions, production considerations, and cutting-edge AI patterns."
     }
     
-    # AI proficiency adaptations
-    ai_instructions = {
-        "Novice": "AI Proficiency (Novice): Introduce AI concepts from first principles. Explain what AI agents are, how they work, and why they matter. Avoid assuming any AI/ML background.",
-        "Beginner": "AI Proficiency (Beginner): Explain AI concepts with practical examples. Clarify common AI terminology. Show how AI tools are used in development without deep theory.",
-        "Intermediate": "AI Proficiency (Intermediate): Reference AI frameworks, model types, and prompt engineering techniques. Assume understanding of basic ML concepts and agent architectures.",
-        "Expert": "AI Proficiency (Expert): Discuss advanced AI agent patterns, fine-tuning strategies, and production deployment considerations. Focus on cutting-edge techniques and research insights."
-    }
+    persona = personas.get((programming_level, ai_proficiency), personas[("Beginner", "Beginner")])
     
-    # Combine instructions
-    prog_inst = prog_instructions.get(programming_level, prog_instructions["Beginner"])
-    ai_inst = ai_instructions.get(ai_proficiency, ai_instructions["Beginner"])
-    
-    instructions = f"""{base}
-{prog_inst}
+    instructions = f"""You are rewriting educational content for {persona}
 
-{ai_inst}
+CRITICAL RULES - READ CAREFULLY:
+1. Write ONE seamless explanation - NOT separate sections for different skill levels
+2. NEVER use these phrases: "Programming Experience:", "AI Proficiency:", "Here's the content, adapted for", "Okay, here's a personalized version", "tailored for"
+3. NEVER create headers with skill level labels
+4. NEVER start with meta-commentary about personalization
+5. Start directly with the actual content
+6. Use proper markdown formatting to match the original content structure
 
-Guidelines:
-- Adapt the tone and depth to match both proficiency levels
-- Maintain the original content's structure and key points
-- Add clarifying examples for lower proficiency levels
-- Skip redundant explanations for higher proficiency levels
-- Use clear paragraphs, not bullet points
-- Keep response focused and concise (aim for 300-500 words)
-- Do not use markdown formatting (no ###, **, or -)
+FORMATTING REQUIREMENTS (match original content style):
+- Use ## for main section headings (Part A, Part B, etc.)
+- Use ### for subsections  
+- Use #### for minor headings
+- Use **bold text** for emphasis and key terms
+- Use numbered lists (1. 2. 3.) for sequential steps
+- Use bullet points (-) for feature lists
+- Include code blocks with ```bash or ```python when showing commands
+- Preserve any special callouts or examples from original
+- Keep the professional, educational tone
+
+Your task:
+- Rewrite the provided content to match this reader's background
+- Maintain the SAME structure and formatting as the original (headings, lists, code blocks)
+- Adjust explanations, terminology, and depth to suit the reader
+- Add helpful context where needed, simplify where appropriate
+- Keep all important information and examples from the original
+- Length: Aim to match the original content length (typically 400-600 words for this type of content)
+
+EXAMPLE OF GOOD OUTPUT (properly formatted):
+\"\"\"
+## Part A: What Is Spec-Kit Plus?
+
+Before getting started, let's understand what Spec-Kit Plus actually is.
+
+### The Architecture: Three Independent Layers
+
+Spec-Kit Plus is a toolkit for specification-driven development with three components:
+
+**1. The Framework** - This is the core toolkit providing:
+- File templates for specs, plans, and tasks
+- Directory structure enforcing the workflow
+- Slash commands like `/sp.specify` and `/sp.plan`
+
+**2. The AI Orchestrator** - Your chosen AI tool:
+- Claude Code (recommended)
+- Gemini CLI (alternative)
+- Acts as your main collaborator
+
+**3. Vertical Intelligence** - Specialized subagents for different tasks
+
+### Installation Steps
+
+**Step 1: Verify Python Version**
+
+Check your Python installation:
+
+\`\`\`bash
+python --version
+\`\`\`
+
+You need Python 3.12 or higher.
+\"\"\"
+
+EXAMPLES OF BAD OUTPUT (DO NOT DO THESE):
+❌ \"Okay, here's a personalized version for intermediate programmers with novice AI proficiency:\"
+❌ \"Here's the content, adapted for you:\"
+❌ \"Programming Experience (Intermediate): The framework provides...\"
+❌ Plain text without any markdown formatting
+❌ Missing code blocks, headings, or lists from the original
+
+Write naturally for your specific reader using proper markdown formatting. Start directly with content.
 """
     
     return instructions

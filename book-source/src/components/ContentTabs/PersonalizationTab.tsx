@@ -50,6 +50,7 @@
  */
 import React, { useState, useEffect, useRef } from "react";
 import { useHistory, useLocation } from "@docusaurus/router";
+import MDXContent from "@theme/MDXContent";
 import { PersonalizationCacheEntry, UserProfile } from "../../types/contentTabs";
 import * as authService from "../../services/authService";
 import * as cacheService from "../../services/cacheService";
@@ -59,6 +60,53 @@ import styles from "./styles.module.css";
 interface PersonalizationTabProps {
   pageId: string;
   content: string;
+}
+
+// Helper function to convert markdown to HTML
+function convertMarkdownToHTML(markdown: string): string {
+  let html = markdown;
+  
+  // Convert headers
+  html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+  
+  // Convert bold text
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  
+  // Convert code blocks
+  html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code class="language-$1">$2</code></pre>');
+  
+  // Convert inline code
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  
+  // Convert numbered lists
+  html = html.replace(/^(\d+\. .+)$/gm, (match) => {
+    const items = match.split(/\n(?=\d+\.\s)/);
+    const listItems = items.map(item => {
+      const content = item.replace(/^\d+\.\s/, '');
+      return `<li>${content}</li>`;
+    }).join('');
+    return `<ol>${listItems}</ol>`;
+  });
+  
+  // Convert bullet lists
+  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>.*<\/li>\n?)+/g, (match) => `<ul>${match}</ul>`);
+  
+  // Convert paragraphs (double newlines)
+  html = html.split('\n\n').map(para => {
+    para = para.trim();
+    if (!para) return '';
+    // Skip if already wrapped in HTML tags
+    if (para.startsWith('<h') || para.startsWith('<ul') || para.startsWith('<ol') || para.startsWith('<pre')) {
+      return para;
+    }
+    return `<p>${para.replace(/\n/g, '<br>')}</p>`;
+  }).join('\n');
+  
+  return html;
 }
 
 // T058: Create PersonalizationTab component
@@ -268,34 +316,22 @@ export default function PersonalizationTab({
   // T069: Render login button if not authenticated
   if (!isAuthenticated) {
     return (
-      <div className={styles.tabContent}>
-        <div className={styles.loginContainer}>
-          <p>Sign in to view personalized content tailored to your experience level.</p>
-          <button 
-            className={styles.loginButton}
-            onClick={handleLoginClick}
-          >
-            Login to See Personalized Content
-          </button>
-        </div>
+      <div className={styles.loginContainer}>
+        <p>Sign in to view personalized content tailored to your experience level.</p>
+        <button 
+          className={styles.loginButton}
+          onClick={handleLoginClick}
+        >
+          Login to See Personalized Content
+        </button>
       </div>
     );
   }
 
   // T070: Main content rendering
   return (
-    <div className={styles.tabContent}>
-      {/* Profile info badge */}
-      {userProfile && (
-        <div className={styles.profileBadge}>
-          <span className={styles.badgeLabel}>Personalized for:</span>
-          <span className={styles.badgeValue}>
-            {userProfile.programmingExperience} Programming, {userProfile.aiProficiency} AI
-          </span>
-        </div>
-      )}
-
-      {/* Generate button */}
+    <div role="tabpanel" id="personalized-panel" aria-labelledby="personalized-tab">
+      {/* Generate button - only show if no content */}
       {!personalizedContent && !isGenerating && !isLoading && (
         <div className={styles.generateContainer}>
           <button
@@ -325,39 +361,19 @@ export default function PersonalizationTab({
         </div>
       )}
 
-      {/* Streaming content */}
+      {/* Content display - rendered as markdown like Original tab */}
       {(isGenerating || personalizedContent) && (
-        <div className={styles.contentWrapper}>
-          {/* Cache indicator */}
-          {isCached && !isGenerating && (
-            <div className={styles.cacheIndicator}>
-              📋 Cached content
-            </div>
-          )}
-
-          {/* Streaming indicator */}
-          {isGenerating && (
-            <div 
-              className={styles.streamingIndicator}
-              role="status"
-              aria-live="polite"
-            >
-              ✨ Generating personalized content...
-            </div>
-          )}
-
-          {/* Content display */}
-          <div
+        <>
+          <div 
             ref={contentContainerRef}
-            className={`${styles.contentContainer} ${isGenerating ? styles.streaming : ''}`}
-          >
-            <div className={styles.personalizedContent}>
-              {isGenerating ? streamingText : personalizedContent}
-            </div>
-            <div ref={contentEndRef} />
-          </div>
+            className="markdown"
+            dangerouslySetInnerHTML={{
+              __html: convertMarkdownToHTML(isGenerating ? streamingText : personalizedContent)
+            }}
+          />
+          <div ref={contentEndRef} />
 
-          {/* Regenerate button */}
+          {/* Regenerate button - subtle and non-intrusive */}
           {!isGenerating && personalizedContent && (
             <div className={styles.regenerateContainer}>
               <button
@@ -369,7 +385,7 @@ export default function PersonalizationTab({
               </button>
             </div>
           )}
-        </div>
+        </>
       )}
     </div>
   );
