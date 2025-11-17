@@ -4,9 +4,9 @@ title: "Code Review with Pull Requests"
 description: "Create pull requests, review changes, and document AI assistance transparently for professional GitHub workflows"
 
 # CONSTITUTIONAL METADATA
-stage: "2 (AI Collaboration with Three Roles)"
+# stage: "2 (AI Collaboration with Three Roles)" # Internal scaffolding - hidden from students
 teaching_modality: "Three Roles + Transparency Demonstration"
-ai_transparency: "CRITICAL - PR descriptions must include AI attribution"
+# ai_transparency: "CRITICAL - PR descriptions must include AI attribution" # Internal scaffolding - reflected in lesson content
 
 # HIDDEN SKILLS METADATA
 skills:
@@ -251,6 +251,9 @@ Added error handling to calculator to prevent crashes on invalid input.
 - ✅ What you modified listed
 - ✅ Bug you found (AI didn't handle empty input) documented
 
+#### 🎓 Expert Insight
+> In AI-native development, transparency about AI assistance is professional practice. You don't memorize PR templates—you understand that documenting AI's role builds trust and helps reviewers evaluate code quality.
+
 **Why This Matters**: Future employers/code reviewers will see you're transparent about AI usage. You don't hide it or overclaim credit. This builds trust.
 
 ---
@@ -314,6 +317,9 @@ When reviewing a diff, ask these questions:
 - ✅ "New validate_input function—makes sense for error handling"
 - ✅ "Code is clear, I understand what it does"
 - ✅ "Ready to merge"
+
+#### 💬 AI Colearning Prompt
+> "Explain what I should look for when reviewing a code diff in a pull request. What are common mistakes AI-generated code might have that I should catch?"
 
 ---
 
@@ -430,6 +436,12 @@ What I Modified & Tested:
 - Together, you created transparent, detailed PR (convergence)
 
 Neither of you would write this alone. Collaboration made it better.
+
+#### 🤝 Practice Exercise
+
+> **Ask your AI**: "I'm creating a pull request for code you helped me generate. Show me how to write a transparent PR description that includes what you generated, what I modified, and what edge cases I tested. Then explain why this transparency matters for code reviews."
+
+**Expected Outcome**: You'll understand that PR descriptions should document the collaboration process, not just the final result.
 
 ---
 

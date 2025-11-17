@@ -4,10 +4,10 @@ title: "Capstone: Task Manager + GitHub Agent HQ"
 description: "Orchestrate complete Git workflow for AI-generated project and understand GitHub's multi-agent orchestration future"
 
 # CONSTITUTIONAL METADATA
-stage: "4 (Spec-Driven Integration + Agent HQ Awareness)"
+# stage: "4 (Spec-Driven Integration + Agent HQ Awareness)" # Internal scaffolding - hidden from students
 teaching_modality: "Specification-First Orchestration + Platform Evolution Awareness"
 synthesis_level: "Capstone - Accumulates L1-L6 Intelligence"
-agent_hq_level: "Awareness (not implementation)"
+# agent_hq_level: "Awareness (not implementation)" # Internal scaffolding - reflected in lesson content
 
 # HIDDEN SKILLS METADATA
 skills:
@@ -203,6 +203,9 @@ After implementation, verify:
 ```
 
 **What You Just Did**: You defined WHAT the program does WITHOUT saying HOW to implement it. This is the specification that AI will use to generate code.
+
+#### 🎓 Expert Insight
+> In AI-native development, you don't memorize coding patterns—you master specification-writing. The fundamental skill shifts from "how do I implement this?" to "what exactly do I want?" Clear specifications lead to quality AI-generated code. Vague specifications lead to bugs and rework.
 
 **Reflection**: Notice how much clarity this specification provides:
 - AI knows exactly what to build
@@ -520,6 +523,9 @@ git commit -m "feat: enhanced input validation and error messages"
 
 **Pattern Recognition**: You just applied the **branch-test-merge** pattern from Lesson 6 automatically without referring back to lessons. This is intelligence accumulation!
 
+#### 💬 AI Colearning Prompt
+> "Explain why creating feature branches for improvements is safer than committing directly to main, even when the code already works. What risks does branching eliminate?"
+
 ---
 
 ## Step 6: Merge and Push to GitHub (15 minutes)
@@ -682,6 +688,12 @@ git log --oneline --graph
   - Professional pull request with AI transparency
   - Demonstration of Git mastery
   - Evidence of specification-driven development
+
+#### 🤝 Practice Exercise
+
+> **Ask your AI**: "Review my task manager capstone project commit history and PR description. Identify what makes this a professional portfolio piece, and suggest one improvement I could make to the documentation."
+
+**Expected Outcome**: You'll understand that professional GitHub projects demonstrate both technical skills and transparent collaboration practices.
 
 **Reflection**: You just managed a complete AI-generated project from specification to production-ready code using Git as your safety system. This is AI-native development at the capstone level.
 

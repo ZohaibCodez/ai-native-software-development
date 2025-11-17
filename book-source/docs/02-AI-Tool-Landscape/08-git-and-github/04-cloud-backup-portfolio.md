@@ -66,9 +66,9 @@ cognitive_load:
 
 teaching_approach: "AI Collaboration with Three Roles (Teacher/Student/Co-Worker)"
 modality: "Three Roles demonstration with hands-on activities"
-stage: "2 (AI Collaboration with bidirectional learning)"
-ai_involvement: "AI as collaborator demonstrating all three roles (teacher, student, co-worker)"
-three_roles_validation: "✓ AI teaches backup+portfolio dual value (Role 1), Student teaches constraints (Role 2), Convergence through recovery testing (Role 3)"
+# stage: "2 (AI Collaboration with bidirectional learning)" # Internal scaffolding - hidden from students
+# ai_involvement: "AI as collaborator demonstrating all three roles (teacher, student, co-worker)" # Internal scaffolding
+# three_roles_validation: "✓ AI teaches backup+portfolio dual value (Role 1), Student teaches constraints (Role 2), Convergence through recovery testing (Role 3)" # Internal scaffolding
 
 # Generation metadata
 generated_by: "content-implementer v1.0.0 (reasoning-activated)"
@@ -159,6 +159,9 @@ repository. I want to connect them. How do I back up my code to GitHub?
 > employers see all your projects, commits, and collaboration history.
 > It demonstrates your real development skills."
 
+#### 💬 AI Colearning Prompt
+> "Explain why GitHub serves as both backup and portfolio. What specific features make it useful for each purpose?"
+
 **What You Learned**: AI taught you that backup and portfolio are dual values of GitHub. You asked about backup, but AI added the career dimension you hadn't considered.
 
 **This is Role 1: AI as Teacher**—It suggests patterns beyond what you explicitly asked.
@@ -187,6 +190,9 @@ How do I avoid accidentally sharing secrets?
 > 4. Then push to GitHub
 >
 > Now your secrets stay local, and only the public code goes to GitHub."
+
+#### 🎓 Expert Insight
+> In AI-native development, you don't memorize `.gitignore` patterns—you understand that secrets and credentials must never be committed. AI can suggest patterns, but you verify nothing sensitive gets pushed.
 
 **What AI Learned**: Your security constraint (secrets must stay local). AI adapted its approach from naive "push everything" to "protect secrets first."
 
@@ -328,6 +334,12 @@ Together, you've designed a safe recovery verification process. Neither of you i
 - You focused on testing
 - AI focused on the clone command
 - Together: **safe test in isolation** + **original project protected**
+
+#### 🤝 Practice Exercise
+
+> **Ask your AI**: "Show me how to clone a GitHub repository to verify my backup works. Then explain the difference between cloning and pulling, and when I'd use each command."
+
+**Expected Outcome**: You'll understand that `git clone` creates a new copy of the entire repository (useful for recovery testing), while `git pull` updates an existing local repository.
 
 ### Activity 3.5: Test Recovery (Optional but Recommended)
 
