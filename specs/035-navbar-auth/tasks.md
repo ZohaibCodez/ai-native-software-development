@@ -26,9 +26,9 @@
 
 **Purpose**: Initialize Docusaurus navbar override structure
 
-- [ ] T001 Swizzle Docusaurus Navbar/Content component to `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T002 Verify swizzled component renders original navbar correctly (no UI breakage)
-- [ ] T003 [P] Add CSS module for navbar auth button styles in `book-source/src/theme/Navbar/Content/styles.module.css`
+- [x] T001 Swizzle Docusaurus Navbar/Content component to `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T002 Verify swizzled component renders original navbar correctly (no UI breakage)
+- [x] T003 [P] Add CSS module for navbar auth button styles in `book-source/src/theme/Navbar/Content/styles.module.css`
 
 ---
 
@@ -38,10 +38,10 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Import authService and types (AuthState, UserProfile) from existing services in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T005 Add React state hooks for authentication state: `isAuthenticated`, `userProfile`, `showLoginModal` in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T006 Implement useEffect hook to check initial auth state on component mount in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T007 Add storage event listener in useEffect to sync auth state changes in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T004 Import authService and types (AuthState, UserProfile) from existing services in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T005 Add React state hooks for authentication state: `isAuthenticated`, `userProfile`, `showLoginModal` in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T006 Implement useEffect hook to check initial auth state on component mount in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T007 Add storage event listener in useEffect to sync auth state changes in `book-source/src/theme/Navbar/Content/index.tsx`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -55,15 +55,15 @@
 
 ### Implementation for User Story 1
 
-- [ ] T008 [US1] Import DummyLoginWithProfile component in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T009 [US1] Render conditional login button (when NOT authenticated) in navbar items array in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T010 [US1] Add onClick handler to login button to set `showLoginModal` state to true in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T011 [US1] Position login button in navbar items array before ColorModeToggle using array splice in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T012 [US1] Render DummyLoginWithProfile modal conditionally when `showLoginModal` is true in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T013 [US1] Add `onClose` callback to DummyLoginWithProfile to set `showLoginModal` to false in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T014 [US1] Add `onSuccess` callback to DummyLoginWithProfile to update auth state and close modal in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T015 [US1] Update auth state (isAuthenticated, userProfile) after successful login in handleLoginSuccess callback in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T016 [US1] Add ARIA label "Login to access personalized content" to login button in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T008 [US1] Import DummyLoginWithProfile component in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T009 [US1] Render conditional login button (when NOT authenticated) in navbar items array in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T010 [US1] Add onClick handler to login button to set `showLoginModal` state to true in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T011 [US1] Position login button in navbar items array before ColorModeToggle using array splice in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T012 [US1] Render DummyLoginWithProfile modal conditionally when `showLoginModal` is true in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T013 [US1] Add `onClose` callback to DummyLoginWithProfile to set `showLoginModal` to false in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T014 [US1] Add `onSuccess` callback to DummyLoginWithProfile to update auth state and close modal in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T015 [US1] Update auth state (isAuthenticated, userProfile) after successful login in handleLoginSuccess callback in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T016 [US1] Add ARIA label "Login to access personalized content" to login button in `book-source/src/theme/Navbar/Content/index.tsx`
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - guest users can log in and see authenticated navbar
 

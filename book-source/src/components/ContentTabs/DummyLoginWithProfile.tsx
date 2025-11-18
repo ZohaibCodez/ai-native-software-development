@@ -22,7 +22,15 @@ interface FormErrors {
   aiProficiency?: string;
 }
 
-export default function DummyLoginWithProfile(): React.ReactElement {
+interface DummyLoginWithProfileProps {
+  onClose?: () => void;
+  onSuccess?: () => void;
+}
+
+export default function DummyLoginWithProfile({
+  onClose,
+  onSuccess,
+}: DummyLoginWithProfileProps = {}): React.ReactElement {
   const history = useHistory();
   const location = useLocation();
   
@@ -39,17 +47,21 @@ export default function DummyLoginWithProfile(): React.ReactElement {
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // T101: Keyboard navigation - Esc to close error
+  // T101: Keyboard navigation - Esc to close error or modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && submitError) {
-        setSubmitError(null);
+      if (e.key === 'Escape') {
+        if (submitError) {
+          setSubmitError(null);
+        } else if (onClose) {
+          onClose();
+        }
       }
     };
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [submitError]);
+  }, [submitError, onClose]);
 
   // T026: Form validation
   const validateForm = (): boolean => {
@@ -130,7 +142,13 @@ export default function DummyLoginWithProfile(): React.ReactElement {
       
       authService.saveSession(data.token, profile);
 
-      // T036: Redirect to returnTo URL or home
+      // Call onSuccess callback if provided (for navbar integration)
+      if (onSuccess) {
+        onSuccess();
+        return; // Don't redirect if callback provided
+      }
+
+      // T036: Redirect to returnTo URL or home (fallback behavior)
       const searchParams = new URLSearchParams(location.search);
       const returnTo = searchParams.get('returnTo') || '/';
       history.push(returnTo);
@@ -146,6 +164,16 @@ export default function DummyLoginWithProfile(): React.ReactElement {
   return (
     <div className={styles.loginContainer}>
       <div className={styles.loginBox}>
+        {onClose && (
+          <button
+            className={styles.closeButton}
+            onClick={onClose}
+            aria-label="Close login modal"
+            type="button"
+          >
+            ×
+          </button>
+        )}
         <h2>Welcome! Let's Personalize Your Learning</h2>
         <p className={styles.loginDescription}>
           Tell us about your experience so we can tailor content to your level.
