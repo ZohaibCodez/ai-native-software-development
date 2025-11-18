@@ -38,14 +38,33 @@ export default function SummaryTab({
   const pendingTextRef = useRef<string>("");
   const throttleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Check authentication on mount
+  // Check authentication on mount and listen for changes
   useEffect(() => {
-    const authenticated = authService.isAuthenticated();
-    setIsAuthenticated(authenticated);
+    const checkAuth = () => {
+      const authenticated = authService.isAuthenticated();
+      setIsAuthenticated(authenticated);
 
-    if (authenticated) {
-      checkCacheAndGenerate();
-    }
+      if (authenticated) {
+        checkCacheAndGenerate();
+      } else {
+        // Clear content when logged out
+        setSummary("");
+        setStreamingText("");
+      }
+    };
+
+    checkAuth();
+
+    // Listen for auth state changes
+    const handleAuthChange = () => {
+      checkAuth();
+    };
+
+    window.addEventListener('authStateChanged', handleAuthChange);
+
+    return () => {
+      window.removeEventListener('authStateChanged', handleAuthChange);
+    };
   }, [pageId]);
 
   // Throttled text update for smoother rendering (60fps)
@@ -94,7 +113,7 @@ export default function SummaryTab({
     };
   }, []);
 
-  const checkCacheAndGenerate = async () => {
+  const checkCacheAndGenerate = useCallback(async () => {
     // Check cache first
     const cacheKey = `summary_${pageId}`;
     const cached = cacheService.get<SummaryCacheEntry>(cacheKey);
@@ -116,9 +135,9 @@ export default function SummaryTab({
 
     // Generate new summary
     await generateSummary();
-  };
+  }, [pageId]);
 
-  const generateSummary = async () => {
+  const generateSummary = useCallback(async () => {
     const token = authService.getToken();
     if (!token) {
       setError("Authentication required");
@@ -203,7 +222,7 @@ export default function SummaryTab({
       setStreamingText("");
       generatingRef.current = false;
     }
-  };
+  }, [pageId, content]); // Dependencies for useCallback
 
   const handleLogin = () => {
     setIsAuthenticated(true);

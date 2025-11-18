@@ -1,3 +1,26 @@
+/**
+ * Navbar Content Component - Swizzled from Docusaurus theme
+ * Feature: 035-navbar-auth
+ * 
+ * This component has been swizzled (ejected) from @docusaurus/theme-classic
+ * to add authentication UI (login/logout button) to the navbar.
+ * 
+ * Swizzling Pattern:
+ * - Command used: npx docusaurus swizzle @docusaurus/theme-classic Navbar/Content --typescript --danger --eject
+ * - Location: book-source/src/theme/Navbar/Content/index.tsx
+ * - Reason: Need full control over navbar item positioning to place auth button between GitHub and ColorModeToggle
+ * 
+ * Authentication State Management:
+ * - Uses existing authService for session management (sessionStorage)
+ * - React hooks (useState, useEffect) manage local component state
+ * - Storage event listener syncs auth state across tabs/components
+ * - No new dependencies: reuses DummyLoginWithProfile modal and authService
+ * 
+ * Button Positioning Logic:
+ * - Login button: Rendered before ColorModeToggle when NOT authenticated
+ * - Logout button: Rendered before ColorModeToggle when authenticated
+ * - Positioning is declarative (conditional rendering) rather than array manipulation
+ */
 import React, {type ReactNode, useState, useEffect} from 'react';
 import clsx from 'clsx';
 import {
@@ -15,11 +38,10 @@ import SearchBar from '@theme/SearchBar';
 import NavbarMobileSidebarToggle from '@theme/Navbar/MobileSidebar/Toggle';
 import NavbarLogo from '@theme/Navbar/Logo';
 import NavbarSearch from '@theme/Navbar/Search';
+import {useLocation} from '@docusaurus/router';
 // T004: Import authService and types
 import * as authService from '../../../services/authService';
 import {UserProfile} from '../../../types/contentTabs';
-// T008: Import DummyLoginWithProfile component
-import DummyLoginWithProfile from '../../../components/ContentTabs/DummyLoginWithProfile';
 
 import styles from './styles.module.css';
 
@@ -78,11 +100,11 @@ function NavbarContentLayout({
 
 export default function NavbarContent(): ReactNode {
   const mobileSidebar = useNavbarMobileSidebar();
+  const location = useLocation();
 
   // T005: Add React state hooks for authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // T006: Implement useEffect hook to check initial auth state on component mount
   // T007: Add storage event listener to sync auth state changes
@@ -90,6 +112,7 @@ export default function NavbarContent(): ReactNode {
     // Check initial auth state
     const checkAuthState = () => {
       const authenticated = authService.isAuthenticated();
+      console.log('🔐 Navbar auth check:', authenticated);
       setIsAuthenticated(authenticated);
       if (authenticated) {
         const session = authService.getSession();
@@ -102,38 +125,53 @@ export default function NavbarContent(): ReactNode {
     // Initial check
     checkAuthState();
 
-    // Listen for storage events (auth state changes in other components)
-    const handleStorageChange = () => {
+    // Listen for storage events (auth state changes in other components/tabs)
+    const handleStorageChange = (e: StorageEvent) => {
+      // Only respond to auth-related changes in sessionStorage
+      if (e.key === 'authToken' || e.key === 'userProfile' || e.key === null) {
+        console.log('🔐 Storage event detected, re-checking auth');
+        checkAuthState();
+      }
+    };
+
+    // Custom event for same-tab logout (storage events don't fire in same tab)
+    const handleAuthChange = () => {
+      console.log('🔐 Auth state changed event, re-checking auth');
       checkAuthState();
     };
 
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+    window.addEventListener('authStateChanged', handleAuthChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('authStateChanged', handleAuthChange);
+    };
+  }, [location.pathname]); // Re-check on navigation
 
-  // T014: Add onSuccess callback to update auth state and close modal
-  // T015: Update auth state after successful login
-  const handleLoginSuccess = () => {
-    setShowLoginModal(false);
-    setIsAuthenticated(true);
-    const session = authService.getSession();
-    setUserProfile(session?.profile || null);
+  // Handle logout: clear auth state and dispatch event
+  const handleLogout = () => {
+    authService.clearToken();
+    setIsAuthenticated(false);
+    setUserProfile(null);
+    
+    // Dispatch custom event to notify other components in same tab
+    window.dispatchEvent(new Event('authStateChanged'));
   };
+
+  // Build login URL with return path
+  const loginUrl = `/login?returnTo=${encodeURIComponent(location.pathname + location.search + location.hash)}`;
 
   const items = useNavbarItems();
   const [leftItems, rightItems] = splitNavbarItems(items);
 
   const searchBarItem = items.find((item) => item.type === 'search');
 
+  // Debug: Log render state
+  console.log('🔍 Navbar render - isAuthenticated:', isAuthenticated, 'userProfile:', userProfile);
+
   return (
     <>
-      {/* T012: Render DummyLoginWithProfile modal conditionally when showLoginModal is true */}
-      {showLoginModal && (
-        <DummyLoginWithProfile
-          onClose={() => setShowLoginModal(false)} // T013: onClose callback
-          onSuccess={handleLoginSuccess} // T014: onSuccess callback
-        />
-      )}
       <NavbarContentLayout
         left={
           // TODO stop hardcoding items?
@@ -148,16 +186,25 @@ export default function NavbarContent(): ReactNode {
           // Ask the user to add the respective navbar items => more flexible
           <>
             <NavbarItems items={rightItems} />
-            {/* T009: Render conditional login button (when NOT authenticated) */}
-            {/* T011: Position login button before ColorModeToggle */}
-            {!isAuthenticated && (
-              <button
+            {/* Login button: redirects to /login page with return URL */}
+            {!isAuthenticated ? (
+              <a
+                href={loginUrl}
                 className={styles.navbarAuthButton}
-                onClick={() => setShowLoginModal(true)} // T010: onClick handler
-                aria-label="Login to access personalized content" // T016: ARIA label
-                type="button"
+                aria-label="Login to access personalized content"
               >
                 Login
+              </a>
+            ) : (
+              /* Logout button: logs user out directly from navbar */
+              <button
+                className={styles.navbarAuthButton}
+                onClick={handleLogout}
+                aria-label="Logout"
+                type="button"
+              >
+                <i className="fa-solid fa-user-circle" aria-hidden="true" style={{marginRight: '0.5rem'}}></i>
+                Logout
               </button>
             )}
             <NavbarColorModeToggle className={styles.colorModeToggle} />

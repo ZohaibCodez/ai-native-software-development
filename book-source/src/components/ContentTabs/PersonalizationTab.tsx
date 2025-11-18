@@ -241,22 +241,39 @@ export default function PersonalizationTab({
   useEffect(() => {
     console.log(`📄 PersonalizationTab mounted/updated for pageId: ${pageId}`);
     
-    const authenticated = authService.isAuthenticated();
-    setIsAuthenticated(authenticated);
+    const checkAuth = () => {
+      const authenticated = authService.isAuthenticated();
+      setIsAuthenticated(authenticated);
 
-    if (authenticated) {
-      const profile = authService.getProfile();
-      setUserProfile(profile);
+      if (authenticated) {
+        const profile = authService.getProfile();
+        setUserProfile(profile);
 
-      if (profile) {
-        const fingerprint = authService.generateProfileFingerprint(profile);
-        console.log(`👤 User profile loaded: ${fingerprint}`);
-        checkCacheAndGenerate(profile);
+        if (profile) {
+          const fingerprint = authService.generateProfileFingerprint(profile);
+          console.log(`👤 User profile loaded: ${fingerprint}`);
+          checkCacheAndGenerate(profile);
+        }
+      } else {
+        // Clear content when logged out
+        setPersonalizedContent("");
+        setStreamingText("");
+        setUserProfile(null);
       }
-    }
+    };
 
-    // Cleanup: Cancel ongoing personalization when pageId changes
+    checkAuth();
+
+    // Listen for auth state changes
+    const handleAuthChange = () => {
+      checkAuth();
+    };
+
+    window.addEventListener('authStateChanged', handleAuthChange);
+
+    // Cleanup: Cancel ongoing personalization when pageId changes or unmounting
     return () => {
+      window.removeEventListener('authStateChanged', handleAuthChange);
       if (generatingRef.current) {
         console.log(`🛑 Cancelling ongoing personalization due to page navigation from ${pageId}`);
         personalizationService.cancel();
@@ -312,7 +329,7 @@ export default function PersonalizationTab({
   }, []);
 
   // T062: Check cache then generate if needed
-  const checkCacheAndGenerate = async (profile: UserProfile) => {
+  const checkCacheAndGenerate = useCallback(async (profile: UserProfile) => {
     // T090: Check session expiration before generation
     if (authService.isSessionExpired()) {
       // T091: Show non-intrusive notification
@@ -348,10 +365,10 @@ export default function PersonalizationTab({
 
     // Generate new personalized content
     await generatePersonalizedContent(profile);
-  };
+  }, [pageId, content]); // Dependencies for useCallback
 
   // T063: Generate personalized content with streaming
-  const generatePersonalizedContent = async (profile: UserProfile) => {
+  const generatePersonalizedContent = useCallback(async (profile: UserProfile) => {
     // T090-T093: Check session expiration and require re-login
     if (authService.isSessionExpired()) {
       setError("Session expired. Redirecting to login...");
@@ -458,7 +475,7 @@ export default function PersonalizationTab({
       setIsLoading(false);
       generatingRef.current = false;
     }
-  };
+  }, [pageId, content, location.pathname, history]); // Dependencies for useCallback
 
   // T068: Handle login button click (REMOVED - inline in button onClick)
 

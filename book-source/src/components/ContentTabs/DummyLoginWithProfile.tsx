@@ -142,6 +142,9 @@ export default function DummyLoginWithProfile({
       
       authService.saveSession(data.token, profile);
 
+      // Dispatch event to notify navbar and other components
+      window.dispatchEvent(new Event('authStateChanged'));
+
       // Call onSuccess callback if provided (for navbar integration)
       if (onSuccess) {
         onSuccess();

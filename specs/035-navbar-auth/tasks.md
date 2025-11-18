@@ -77,14 +77,14 @@
 
 ### Implementation for User Story 2
 
-- [ ] T017 [US2] Render conditional logout button (when authenticated) in navbar items array in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T018 [US2] Add Font Awesome fa-user-circle icon to logout button in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T019 [US2] Add screen-reader-only text "Logout" using sr-only CSS class in `book-source/src/theme/Navbar/Content/styles.module.css`
-- [ ] T020 [US2] Implement handleLogout function to call authService.clearToken() in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T021 [US2] Update local state (isAuthenticated, userProfile) after logout in handleLogout function in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T022 [US2] Add onClick handler to logout button to call handleLogout in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T023 [US2] Add ARIA label "Logout" to logout button in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T024 [US2] Add aria-hidden="true" to user icon in logout button in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T017 [US2] Render conditional logout button (when authenticated) in navbar items array in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T018 [US2] Add Font Awesome fa-user-circle icon to logout button in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T019 [US2] Add screen-reader-only text "Logout" using sr-only CSS class in `book-source/src/theme/Navbar/Content/styles.module.css`
+- [x] T020 [US2] Implement handleLogout function to call authService.clearToken() in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T021 [US2] Update local state (isAuthenticated, userProfile) after logout in handleLogout function in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T022 [US2] Add onClick handler to logout button to call handleLogout in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T023 [US2] Add ARIA label "Logout" to logout button in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T024 [US2] Add aria-hidden="true" to user icon in logout button in `book-source/src/theme/Navbar/Content/index.tsx`
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - full login/logout cycle functional
 
@@ -98,12 +98,12 @@
 
 ### Implementation for User Story 3
 
-- [ ] T025 [P] [US3] Add hover state styles for login button in `book-source/src/theme/Navbar/Content/styles.module.css`
-- [ ] T026 [P] [US3] Add hover state styles for logout button in `book-source/src/theme/Navbar/Content/styles.module.css`
-- [ ] T027 [P] [US3] Add focus visible styles for keyboard accessibility in `book-source/src/theme/Navbar/Content/styles.module.css`
-- [ ] T028 [US3] Position logout button (with icon) in navbar items array before ColorModeToggle in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T029 [US3] Add type="button" attribute to both login and logout buttons in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T030 [US3] Verify button styling matches existing navbar items (GitHub link, theme toggle) in `book-source/src/theme/Navbar/Content/styles.module.css`
+- [x] T025 [P] [US3] Add hover state styles for login button in `book-source/src/theme/Navbar/Content/styles.module.css`
+- [x] T026 [P] [US3] Add hover state styles for logout button in `book-source/src/theme/Navbar/Content/styles.module.css`
+- [x] T027 [P] [US3] Add focus visible styles for keyboard accessibility in `book-source/src/theme/Navbar/Content/styles.module.css`
+- [x] T028 [US3] Position logout button (with icon) in navbar items array before ColorModeToggle in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T029 [US3] Add type="button" attribute to both login and logout buttons in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T030 [US3] Verify button styling matches existing navbar items (GitHub link, theme toggle) in `book-source/src/theme/Navbar/Content/styles.module.css`
 
 **Checkpoint**: All user stories should now be independently functional - login/logout with full visual feedback
 
@@ -113,22 +113,22 @@
 
 **Purpose**: Improvements that affect multiple user stories and final validation
 
-- [ ] T031 [P] Test login button positioning on desktop viewport (1920px width) using browser DevTools
-- [ ] T032 [P] Test login button positioning on tablet viewport (768px width) using browser DevTools
-- [ ] T033 [P] Test login button positioning on mobile viewport (375px width) using browser DevTools
-- [ ] T034 Test keyboard navigation: Tab to focus login button, Enter to activate (see quickstart.md Test 4)
-- [ ] T035 Test keyboard navigation: Space key to activate login button (alternative to Enter)
-- [ ] T036 Test keyboard navigation: Escape key to close modal without logging in (see quickstart.md Test 4)
-- [ ] T037 Test screen reader accessibility with NVDA (Windows) or VoiceOver (macOS) - verify ARIA labels announced (see quickstart.md Test 5)
-- [ ] T038 Test session persistence: Log in → Navigate to different page → Refresh → Verify still logged in (see quickstart.md Test 2)
-- [ ] T039 Test browser session timeout: Log in → Close browser → Reopen → Verify logged out (see quickstart.md Test 7)
-- [ ] T040 Test multi-tab independence: Log in on Tab 1 → Open Tab 2 → Verify Tab 2 shows "Login" button (see quickstart.md Test 8)
-- [ ] T041 Test logout in Tab 1 → Verify Tab 2 remains logged in (multi-tab independence validation)
-- [ ] T042 Verify no console errors or warnings in browser DevTools during login/logout flow
-- [ ] T043 Verify no UI layout breakage in navbar (GitHub link, search, theme toggle positions unchanged)
-- [ ] T044 Run all quickstart.md validation tests (Tests 1-8) and verify all acceptance criteria pass
-- [ ] T045 [P] Add inline code comments explaining swizzle pattern and auth state management in `book-source/src/theme/Navbar/Content/index.tsx`
-- [ ] T046 [P] Document button positioning logic (array splice before ColorModeToggle) in code comments in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T031 [P] Test login button positioning on desktop viewport (1920px width) using browser DevTools
+- [x] T032 [P] Test login button positioning on tablet viewport (768px width) using browser DevTools
+- [x] T033 [P] Test login button positioning on mobile viewport (375px width) using browser DevTools
+- [x] T034 Test keyboard navigation: Tab to focus login button, Enter to activate (see quickstart.md Test 4)
+- [x] T035 Test keyboard navigation: Space key to activate login button (alternative to Enter)
+- [x] T036 Test keyboard navigation: Escape key to close modal without logging in (see quickstart.md Test 4)
+- [x] T037 Test screen reader accessibility with NVDA (Windows) or VoiceOver (macOS) - verify ARIA labels announced (see quickstart.md Test 5)
+- [x] T038 Test session persistence: Log in → Navigate to different page → Refresh → Verify still logged in (see quickstart.md Test 2)
+- [x] T039 Test browser session timeout: Log in → Close browser → Reopen → Verify logged out (see quickstart.md Test 7)
+- [x] T040 Test multi-tab independence: Log in on Tab 1 → Open Tab 2 → Verify Tab 2 shows "Login" button (see quickstart.md Test 8)
+- [x] T041 Test logout in Tab 1 → Verify Tab 2 remains logged in (multi-tab independence validation)
+- [x] T042 Verify no console errors or warnings in browser DevTools during login/logout flow
+- [x] T043 Verify no UI layout breakage in navbar (GitHub link, search, theme toggle positions unchanged)
+- [x] T044 Run all quickstart.md validation tests (Tests 1-8) and verify all acceptance criteria pass
+- [x] T045 [P] Add inline code comments explaining swizzle pattern and auth state management in `book-source/src/theme/Navbar/Content/index.tsx`
+- [x] T046 [P] Document button positioning logic (array splice before ColorModeToggle) in code comments in `book-source/src/theme/Navbar/Content/index.tsx`
 
 ---
 
