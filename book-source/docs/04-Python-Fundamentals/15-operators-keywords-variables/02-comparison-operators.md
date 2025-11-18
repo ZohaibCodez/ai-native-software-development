@@ -235,7 +235,7 @@ Copy and ask your AI:
 > - movie_age_rating = 13
 > - user_age = 12
 >
-> Write a comparison that checks if user_age >= movie_age_rating.
+> Write a comparison that checks if user_age &gt;= movie_age_rating.
 > Is the result True or False? Explain the logic using the comparison operator."
 
 **Expected Outcome**: You'll apply comparison operators to realistic problems; understand how conditions work in real scenarios; predict results correctly before running code.

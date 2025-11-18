@@ -506,8 +506,7 @@ match color:
         action = "Unknown signal"
 ```
 
-Walk me through step-by-step.
-```
+Walk me through step-by-step."
 
 **Expected Outcome:**
 Your AI should trace the execution:

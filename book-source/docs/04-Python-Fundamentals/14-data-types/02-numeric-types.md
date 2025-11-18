@@ -146,15 +146,13 @@ inventory: int = 500
 
 **Notice**: Each variable includes a **type hint** (`: int`). This tells Python (and anyone reading your code) that this variable should hold an integer.
 
-To verify the type, use the `type()` function:
+Verify with `type()` (from Lesson 1):
 
 ```python
-print(type(age))              # Output: <class 'int'>
-print(type(student_count))    # Output: <class 'int'>
-print(type(-5))               # Output: <class 'int'>
+print(type(age))              # <class 'int'>
+print(type(student_count))    # <class 'int'>
+print(type(-5))               # <class 'int'>
 ```
-
-The `type()` function inspects what type Python assigned to a value. Always outputs `<class 'typename'>`.
 
 #### 💬 AI Colearning Prompt
 
@@ -231,7 +229,7 @@ In AI-native development, you don't memorize floating-point edge cases—you und
 
 ## Decision Guide: Integer vs. Float
 
-When faced with a numeric scenario, use this table to decide:
+Remember the Type Decision Framework from Lesson 1? Here's how it applies specifically to choosing between int and float:
 
 | Scenario | Type | Why |
 |----------|------|-----|
@@ -405,9 +403,14 @@ Classify each value as `int`, `float`, or `complex`. Write your reasoning.
 **Check your work with `type()`:**
 
 ```python
-values = [42, 3.14, -5, 0.5, 100, 2+3j, -0.001, 1000000, 0.0, 1e10, -3-4j, 99.99, 0, 7.5, 2e-5]
-for v in values:
-    print(f"{v} is {type(v)}")
+# Use type() to verify each classification
+print(f"42 is {type(42)}")
+print(f"3.14 is {type(3.14)}")
+print(f"-5 is {type(-5)}")
+print(f"0.5 is {type(0.5)}")
+print(f"100 is {type(100)}")
+# (Continue for remaining values...)
+# Note: Loops for repetitive tasks are covered in Chapter 17
 ```
 
 ### Exercise 2: Fix the Type Errors
@@ -447,34 +450,119 @@ e = 10 // 2
 f = 10.0 / 2
 g = type(10)  # Special: what's the type of type()?
 
-for value in [a, b, c, d, e, f, g]:
-    print(f"{value} has type {type(value)}")
+# Check each one (loops covered in Chapter 17)
+print(f"{a} has type {type(a)}")
+print(f"{b} has type {type(b)}")
+print(f"{c} has type {type(c)}")
+print(f"{d} has type {type(d)}")
+print(f"{e} has type {type(e)}")
+print(f"{f} has type {type(f)}")
+print(f"{g} has type {type(g)}")
 ```
 
 ---
 
-## Try With AI
+## Try With AI: Type Selection Decision Challenge
 
-Open ChatGPT or your AI companion tool. Use these prompts in sequence:
+### Part 1: Classify Data Types (Your Turn First)
 
-**Prompt 1: Generate Scenarios**
-> "Give me 20 real-world data scenarios (like 'number of employees', 'average temperature', 'price per item'). For each, should I use int or float? Format as a numbered list with your reasoning."
+**Before asking AI**, analyze these 15 real-world scenarios and choose the appropriate numeric type:
 
-**Expected Outcome**: AI generates diverse scenarios. You'll see patterns in when decimals matter.
+| Scenario | int or float? | Why? |
+|----------|---------------|------|
+| Number of students in a class | ? | ? |
+| Average test score (0-100) | ? | ? |
+| Price of a product ($19.99) | ? | ? |
+| Days in a month | ? | ? |
+| Temperature in Celsius (23.5°C) | ? | ? |
+| Population of a city | ? | ? |
+| Distance in kilometers (42.195) | ? | ? |
+| Age of a person | ? | ? |
+| Stock price ($150.47) | ? | ? |
+| Count of items in inventory | ? | ? |
 
-**Prompt 2: Test Your Understanding**
-> "Classify these 5 values and tell me the reasoning: 17, -3.5, 50.0, 0, 2+4j. Then explain why complex numbers are rarely used."
+**Your task**: Fill in the table. For EACH, write a one-sentence reason for your choice.
 
-**Expected Outcome**: AI confirms your type classification and explains when you'd need complex numbers (advanced use cases).
+---
 
-**Prompt 3: Complex Numbers Exposure**
-> "Create 3 real-world examples where complex numbers solve problems. For each, explain the real and imaginary parts."
+### Part 2: AI Validates Your Reasoning (Discovery)
 
-**Expected Outcome**: You'll see that complex numbers have genuine applications, even if you won't use them soon.
+Share your classification with AI:
 
-**Stretch Prompt (For Advanced Learners)**
-> "Explain the IEEE 754 floating-point standard and why 0.1 + 0.2 ≠ 0.3 in Python. Show me how to work around this issue."
+> "I classified these 10 scenarios as int or float. Here's my reasoning:
+> [paste your table]
+>
+> For EACH: Tell me if I got it right. If I chose wrong, explain WHY the other type is better. Focus on:
+> 1. Does this data naturally have decimals?
+> 2. What happens if I choose wrong (int when I need float, or vice versa)?"
 
-**Expected Outcome**: Deep understanding of why float precision is an issue (and when to care).
+**Your evaluation task**:
+- How many did you get right?
+- For wrong ones: Do you understand why now?
+- Can you articulate a RULE: "Use int when _____, use float when _____"?
 
-**Safety Note**: AI-generated code might have type hints. Always verify the logic makes sense. Ask "Why did you choose float instead of int?" to deepen understanding.
+---
+
+### Part 3: Challenge AI with Edge Cases (Student Teaches AI)
+
+Test AI's understanding with tricky scenarios:
+
+> "I have edge cases that challenge the int/float decision:
+>
+> **Edge Case 1**: Money ($19.99)
+> - You said float, but what about floating-point precision errors (0.1 + 0.2 ≠ 0.3)?
+> - Show me an example where using float for money causes a bug
+> - What's the alternative? (Hint: Decimal type, cents as int)
+>
+> **Edge Case 2**: Temperature (23.5°C)
+> - You said float, but what if I'm building a weather app that only shows whole degrees?
+> - Should I store as float and round for display, or store as int?
+> - What are the tradeoffs?
+>
+> **Edge Case 3**: Large integers (population: 7,900,000,000)
+> - Does Python's int have a maximum size like other languages (32-bit, 64-bit)?
+> - What happens if I do: `x: int = 10**100` (googol)?
+> - Compare to float's maximum size."
+
+**Your debugging task**:
+- Run the money precision example. Can you reproduce the bug?
+- Which edge case surprised you most?
+
+---
+
+### Part 4: Build a Type Selector Tool (Convergence)
+
+Create a decision flowchart with AI:
+
+> "Let's build a decision tree for choosing numeric types in MY projects:
+>
+> **Decision Tree**:
+> ```
+> START: What data am I storing?
+>   │
+>   ├─ Whole numbers only? → Check...
+>   │   ├─ Counts/quantities → int
+>   │   ├─ Money (cents) → int
+>   │   └─ Age/population → int
+>   │
+>   ├─ Decimals needed? → Check...
+>   │   ├─ Scientific measurements → float
+>   │   ├─ Percentages/ratios → float
+>   │   ├─ Money (dollars) → Decimal (not float!)
+>   │   └─ Geographic coordinates → float
+>   │
+>   └─ Complex numbers? → complex (rare)
+> ```
+>
+> Expand this tree with:
+> 1. Add 3 more scenarios I might encounter
+> 2. Add decision criteria (size limits, precision needs)
+> 3. Add a 'Red Flags' section: When does my choice cause bugs?"
+
+**Refinement**:
+> "This tree doesn't cover: What if I'm reading data from a file/API and don't know the type in advance? Add a 'Type Validation' branch."
+
+---
+
+**Time**: 25-30 minutes total
+**Outcome**: You've built a mental model for numeric type selection grounded in real-world scenarios and edge cases—not just memorizing definitions.

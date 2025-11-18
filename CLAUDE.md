@@ -1,8 +1,16 @@
 # Claude Code Rules — Reasoning-Activated Edition
 
-**Version**: 5.0.0 (Concise Reasoning Framework)
-**Constitution**: v6.0.0
-**Last Updated**: 2025-01-17
+**Version**: 5.1.0 (Context-First Framework)
+**Constitution**: v6.0.1
+**Last Updated**: 2025-11-18
+
+**v5.1.0 Changes**:
+- **CRITICAL**: Added mandatory context-gathering protocol (Section I)
+- Before ANY chapter/lesson work, MUST read chapter-index.md and README
+- Must determine pedagogical layer BEFORE designing content
+- Must state understanding and get user confirmation
+- Added Chapter 9 failure mode as concrete example
+- Updated Execution Contract to enforce context-first workflow
 
 ---
 
@@ -14,13 +22,112 @@
 
 ---
 
-## I. Before Any Task: Recognize Your Cognitive Mode
+## I. Before Any Task: STOP and Gather Context
+
+**CRITICAL**: Before executing ANY chapter/lesson work, you MUST complete this context-gathering protocol.
+
+### Step 1: Read the Learning Context (MANDATORY)
+
+**For Chapter Work**: Read these files FIRST (no exceptions):
+1. **`book-source/docs/chapter-index.md`** - Locate the chapter number and extract:
+   - Part number (determines prerequisite knowledge)
+   - Proficiency level (A1/A2/B1/B2/C1/C2)
+   - Chapter theme and learning objectives
+   - Prerequisites (what students know BEFORE this chapter)
+
+2. **Chapter README** (`book-source/docs/[part]/[chapter]/README.md`) - Extract:
+   - Lesson structure (how many lessons, what each teaches)
+   - Pedagogical approach currently used
+   - Any existing constraints or design decisions
+
+**For Lesson Work**: Additionally read:
+3. **Previous lesson** (if exists) - Understand progression and accumulated knowledge
+4. **Specification** (if exists in `specs/`) - Check for existing design decisions
+
+### Step 2: Determine Pedagogical Layer (BEFORE designing)
+
+Ask yourself these questions **in order**:
+
+**Question 1: What does the student already know?**
+- Check chapter prerequisites from chapter-index.md
+- Check Part number (Part 1-2 = no programming, Part 3 = markdown/prompts, Part 4+ = Python)
+- **Example**: Chapter 9 is in Part 3 → students have NO programming knowledge yet
+
+**Question 2: What is this chapter teaching?**
+- **Syntax/concepts** (markdown headings, Python variables) → Layer 1 (Manual)
+- **Using tools with AI** (debugging with AI, refactoring with AI) → Layer 2 (Collaboration)
+- **Creating reusable patterns** (custom prompts, skills) → Layer 3 (Intelligence)
+- **Orchestrating projects** (capstone, full apps) → Layer 4 (Spec-Driven)
+
+**Question 3: Does the user's request match the chapter's natural layer?**
+- **If YES**: Proceed with that layer's approach
+- **If NO**: STOP and ask user: "This chapter teaches [X]. Your request suggests [Y] approach. Should I adjust the approach, or did I misunderstand the chapter's purpose?"
+
+### Step 3: Check for Pedagogical Conflicts
+
+**Common conflicts to detect:**
+
+❌ **Conflict 1: Teaching syntax as specification writing**
+- **Wrong**: "Chapter 9 teaches markdown as Intent Layer for specs" (Layer 4 thinking)
+- **Right**: "Chapter 9 teaches markdown syntax basics" (Layer 1 thinking)
+
+❌ **Conflict 2: Using examples that require unknown prerequisites**
+- **Wrong**: Using Python code examples when students haven't learned Python yet
+- **Right**: Using Python code blocks to teach "markdown code block syntax" (meta-level teaching)
+
+❌ **Conflict 3: Skipping manual foundation**
+- **Wrong**: Teaching Python loops by having AI generate code first
+- **Right**: Teaching manual loop writing, THEN using AI for optimization (Layer 1 → Layer 2)
+
+### Step 4: State Your Understanding (BEFORE starting work)
+
+**Output this summary** (shows your reasoning):
+
+```
+CONTEXT GATHERED:
+- Chapter: [number] "[title]"
+- Part: [number] (Student prerequisite: [what they know])
+- Proficiency: [A1/A2/B1/etc]
+- Teaching: [core concept being taught]
+- Pedagogical Layer: [L1/L2/L3/L4] because [reasoning]
+- Approach: [how you'll teach this]
+- Potential Conflicts Checked: [any conflicts detected and resolved]
+```
+
+**If user confirms context is correct → Proceed**
+**If user corrects you → Update understanding, restate, get confirmation**
+
+---
+
+## FAILURE MODE: Chapter 9 Example
+
+**What I did wrong** (2025-11-18):
+- ❌ Did NOT read chapter-index.md to check Part number
+- ❌ Did NOT verify what students know at this stage
+- ❌ Assumed "no code examples" meant "teach specifications instead of syntax"
+- ❌ Applied Layer 4 (Spec-Driven) thinking to a Layer 1 (Manual Foundation) chapter
+- ❌ Created 5 new lessons before user pointed out fundamental misunderstanding
+
+**What I should have done**:
+1. ✅ Read chapter-index.md → Part 3, Chapter 9, A1-A2 proficiency
+2. ✅ Recognize: Part 3 = students have NO programming yet
+3. ✅ Read existing lessons → Teaching markdown syntax (headings, lists, code blocks)
+4. ✅ Understand: Python examples teach "markdown code block syntax" not "Python programming"
+5. ✅ Determine: Layer 1 (Manual) - students practice markdown syntax by hand
+6. ✅ State context understanding and get user confirmation BEFORE proceeding
+
+**Result**: Would have avoided 582-line spec, 1,181-line plan, 5 wrong lessons, and complete revert.
+
+---
+
+## II. Recognize Your Cognitive Mode (After Context Gathered)
 
 ### You Tend to Converge Toward:
 - Lecture-style explanations (passive information transfer)
 - Toy examples disconnected from production (todo apps)
 - Topic-based organization (ignoring learning psychology)
 - Passive AI tool presentation (violates Three Roles framework)
+- **Skipping context gathering** (assuming you know the layer without reading)
 
 ### Activate Reasoning By Asking:
 
@@ -42,7 +149,7 @@
 
 ---
 
-## II. Constitutional Reasoning Framework
+## III. Constitutional Reasoning Framework
 
 **Reference**: `.specify/memory/constitution.md` (v6.0.0)
 
@@ -62,7 +169,7 @@
 
 ---
 
-## III. 4-Layer Teaching Method (Integrated Workflow)
+## IV. 4-Layer Teaching Method (Integrated Workflow)
 
 ### Layer 1: Manual Foundation
 **Recognition**: First exposure, stable concept, needs mental model
@@ -115,7 +222,7 @@
 
 ---
 
-## IV. Domain Skills: Reasoning-Activated Architecture
+## V. Domain Skills: Reasoning-Activated Architecture
 
 **Location**: `.claude/skills/`
 
@@ -134,7 +241,7 @@
 
 ---
 
-## V. Agent Architecture (Current)
+## VI. Agent Architecture (Current)
 
 **Location**: `.claude/agents/`
 
@@ -156,7 +263,7 @@
 
 ---
 
-## VI. Self-Monitoring: Anti-Convergence Checklist
+## VII. Self-Monitoring: Anti-Convergence Checklist
 
 **Before finalizing ANY content, check:**
 
@@ -204,18 +311,19 @@ As the main request completes, you MUST create and complete a PHR (Prompt Histor
    
 ---
 
-## VII. Execution Contract (Every Request)
+## VIII. Execution Contract (Every Request)
 
-1. **Recognize Layer** (L1/L2/L3/L4)
-2. **Activate Cognitive Mode** (Teacher, Collaborator, Designer, Validator)
-3. **Apply Tier Complexity** (A2/B1/C2 from chapter-index.md)
-4. **Produce Output** (Aligned with layer + tier)
-5. **Self-Monitor** (Run anti-convergence checklist)
-6. **Document** (PHR for interaction, ADR for significant decisions)
+1. **Gather Context** (Section I: Read chapter-index.md, README, determine layer)
+2. **State Understanding** (Output context summary, get user confirmation)
+3. **Activate Cognitive Mode** (Teacher, Collaborator, Designer, Validator)
+4. **Apply Tier Complexity** (A2/B1/C2 from chapter-index.md)
+5. **Produce Output** (Aligned with layer + tier)
+6. **Self-Monitor** (Run anti-convergence checklist)
+7. **Document** (PHR for interaction, ADR for significant decisions)
 
 ---
 
-## VIII. Quick Reference
+## IX. Quick Reference
 
 ### Layer Recognition Matrix
 
