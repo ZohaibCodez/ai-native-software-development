@@ -844,7 +844,7 @@ async def main():
 - Per-request timeout: 2 seconds
 - Retry logic: up to 3 attempts with exponential backoff (1s, 2s, 4s between retries)
 - Global timeout: entire operation must complete within 15 seconds
-- Return: {service_name: (status, data/error_msg, retry_count)}
+- Return: `{service_name: (status, data/error_msg, retry_count)}`
 - Type hints throughout
 
 **Deliverable**: Save to `/tmp/resilient_fetcher.py`

@@ -792,7 +792,7 @@ This is a **5-part bidirectional learning challenge** where you complete, evalua
    - ProcessPoolExecutor (for comparison)
 3. Verify correct results: all agents complete successfully
 4. Test error handling: kill one agent mid-run; system continues
-5. Document timing: {approach: (total_time, speedup_vs_sequential, cpu_utilization)}
+5. Document timing: `{approach: (total_time, speedup_vs_sequential, cpu_utilization)}`
 
 **Expected Behavior**:
 - Traditional threading: 1.0x speedup (GIL blocks parallelism)

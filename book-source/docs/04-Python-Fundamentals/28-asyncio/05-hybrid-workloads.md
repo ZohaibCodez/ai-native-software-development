@@ -1203,7 +1203,7 @@ asyncio.run(pipeline())
 - Store results (asyncio.sleep 0.1-0.3s each)
 - Stages connected with asyncio.Queue (implement backpressure)
 - Measure: throughput (items/second), latency (item start to finish), bottleneck identification
-- Return: {item: (fetch_ms, process_ms, store_ms, e2e_ms)}, plus throughput metrics
+- Return: `{item: (fetch_ms, process_ms, store_ms, e2e_ms)}`, plus throughput metrics
 - Type hints throughout
 
 **Deliverable**: Save to `/tmp/data_pipeline.py`

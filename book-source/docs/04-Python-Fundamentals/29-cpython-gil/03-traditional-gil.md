@@ -820,7 +820,7 @@ This is a **4-part bidirectional learning challenge** where you understand the G
 - Analyze 5 workload types (CPU-heavy, I/O-heavy, hybrid, GPU-bound, memory-bound)
 - For each workload, recommend concurrency strategy: threading, multiprocessing, asyncio, or hybrid
 - Explain reasoning (GIL impact, overhead, scaling characteristics)
-- Provide decision matrix: {workload_type: (recommended_strategy, reasoning, expected_speedup)}
+- Provide decision matrix: `{workload_type: (recommended_strategy, reasoning, expected_speedup)}`
 - Include code template for each strategy
 - Type hints throughout
 

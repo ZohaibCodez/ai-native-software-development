@@ -976,7 +976,7 @@ print(f"After adding 0: {sl}")
 
 ### Validation Checklist
 
-- ✅ Vector supports +, -, *, ==, <, len(), iteration
+- ✅ Vector supports +, -, *, ==, \<, len(), iteration
 - ✅ SortedList supports len(), indexing, containment, iteration
 - ✅ __str__ and __repr__ provide clear output
 - ✅ NotImplemented returned for unsupported operations

@@ -642,7 +642,7 @@ asyncio.run(main())
 - 4 worker processes for CPU work
 - Fetch and process should overlap (not sequential)
 - Measure: total time, fetch time, process time
-- Return: {source: (fetch_ms, process_ms, result)}
+- Return: `{source: (fetch_ms, process_ms, result)}`
 - Type hints throughout
 
 **Deliverable**: Save to `/tmp/hybrid_pipeline.py`

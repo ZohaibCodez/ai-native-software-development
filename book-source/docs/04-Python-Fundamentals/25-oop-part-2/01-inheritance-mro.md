@@ -812,7 +812,7 @@ if __name__ == "__main__":
 - ✅ BaseAgent defines the contract
 - ✅ All subclasses call super() properly
 - ✅ No code duplication across agent types
-- ✅ Adding a new agent type requires <10 lines of code
+- ✅ Adding a new agent type requires \<10 lines of code
 - ✅ Bug fix in BaseAgent applies to all agents automatically
 
 ### Deliverable
