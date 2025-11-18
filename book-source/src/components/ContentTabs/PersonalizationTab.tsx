@@ -48,7 +48,7 @@
  * - SUCCESS → READY (on regenerate click)
  * - ERROR → READY (on retry click)
  */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useHistory, useLocation } from "@docusaurus/router";
 import MDXContent from "@theme/MDXContent";
 import { PersonalizationCacheEntry, UserProfile } from "../../types/contentTabs";
@@ -233,6 +233,9 @@ export default function PersonalizationTab({
   const contentEndRef = useRef<HTMLDivElement>(null);
   const generatingRef = useRef(false);
   const contentContainerRef = useRef<HTMLDivElement>(null);
+  const lastUpdateRef = useRef<number>(0);
+  const pendingTextRef = useRef<string>("");
+  const throttleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // T060: Check authentication and load profile
   useEffect(() => {
@@ -262,13 +265,51 @@ export default function PersonalizationTab({
     };
   }, [pageId]);
 
+  // Throttled text update for smoother rendering
+  const throttledSetStreamingText = useCallback((text: string) => {
+    const now = Date.now();
+    const timeSinceLastUpdate = now - lastUpdateRef.current;
+    
+    // Update at most every 50ms for smoother, more readable streaming
+    if (timeSinceLastUpdate >= 50) {
+      lastUpdateRef.current = now;
+      setStreamingText(text);
+      pendingTextRef.current = "";
+    } else {
+      // Store pending update
+      pendingTextRef.current = text;
+      
+      // Schedule update
+      if (throttleTimerRef.current) {
+        clearTimeout(throttleTimerRef.current);
+      }
+      
+      throttleTimerRef.current = setTimeout(() => {
+        lastUpdateRef.current = Date.now();
+        setStreamingText(pendingTextRef.current);
+        pendingTextRef.current = "";
+      }, 50 - timeSinceLastUpdate);
+    }
+  }, []);
+
   // T061: Auto-scroll during streaming
   useEffect(() => {
     if (isGenerating && contentContainerRef.current) {
-      contentContainerRef.current.scrollTop =
-        contentContainerRef.current.scrollHeight;
+      contentContainerRef.current.scrollTo({
+        top: contentContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   }, [streamingText, isGenerating]);
+
+  // Cleanup throttle timer on unmount
+  useEffect(() => {
+    return () => {
+      if (throttleTimerRef.current) {
+        clearTimeout(throttleTimerRef.current);
+      }
+    };
+  }, []);
 
   // T062: Check cache then generate if needed
   const checkCacheAndGenerate = async (profile: UserProfile) => {
@@ -370,7 +411,7 @@ export default function PersonalizationTab({
           }
 
           accumulatedContent += chunk;
-          setStreamingText(accumulatedContent);
+          throttledSetStreamingText(accumulatedContent);
         },
         () => {
           // T065: On completion, cache the result

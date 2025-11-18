@@ -1,7 +1,7 @@
 /**
  * SummaryTab Component - displays AI-generated summary with streaming support
  */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useHistory, useLocation } from "@docusaurus/router";
 import { SummaryCacheEntry } from "../../types/contentTabs";
 import * as authService from "../../services/authService";
@@ -9,6 +9,7 @@ import * as cacheService from "../../services/cacheService";
 import * as summaryService from "../../services/summaryService";
 import styles from "./styles.module.css";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface SummaryTabProps {
   pageId: string;
@@ -33,6 +34,9 @@ export default function SummaryTab({
   const summaryEndRef = useRef<HTMLDivElement>(null);
   const generatingRef = useRef(false);
   const summaryContainerRef = useRef<HTMLDivElement>(null);
+  const lastUpdateRef = useRef<number>(0);
+  const pendingTextRef = useRef<string>("");
+  const throttleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Check authentication on mount
   useEffect(() => {
@@ -44,14 +48,51 @@ export default function SummaryTab({
     }
   }, [pageId]);
 
-  // Auto-scroll to latest content during streaming
+  // Throttled text update for smoother rendering (60fps)
+  const throttledSetStreamingText = useCallback((text: string) => {
+    const now = Date.now();
+    const timeSinceLastUpdate = now - lastUpdateRef.current;
+    
+    // Update at most every 50ms for smoother, more readable streaming
+    if (timeSinceLastUpdate >= 50) {
+      lastUpdateRef.current = now;
+      setStreamingText(text);
+      pendingTextRef.current = "";
+    } else {
+      // Store pending update
+      pendingTextRef.current = text;
+      
+      // Schedule update
+      if (throttleTimerRef.current) {
+        clearTimeout(throttleTimerRef.current);
+      }
+      
+      throttleTimerRef.current = setTimeout(() => {
+        lastUpdateRef.current = Date.now();
+        setStreamingText(pendingTextRef.current);
+        pendingTextRef.current = "";
+      }, 50 - timeSinceLastUpdate);
+    }
+  }, []);
+
+  // Auto-scroll to latest content during streaming with smooth behavior
   useEffect(() => {
     if (isGenerating && summaryContainerRef.current) {
-      // Smooth scroll to bottom during streaming
-      summaryContainerRef.current.scrollTop =
-        summaryContainerRef.current.scrollHeight;
+      summaryContainerRef.current.scrollTo({
+        top: summaryContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   }, [streamingText, isGenerating]);
+
+  // Cleanup throttle timer on unmount
+  useEffect(() => {
+    return () => {
+      if (throttleTimerRef.current) {
+        clearTimeout(throttleTimerRef.current);
+      }
+    };
+  }, []);
 
   const checkCacheAndGenerate = async () => {
     // Check cache first
@@ -120,7 +161,8 @@ export default function SummaryTab({
             .replace(/\s+$/g, '')             // Remove trailing whitespace
             .trim();
           
-          setStreamingText(normalized);
+          // Use throttled update for smoother rendering
+          throttledSetStreamingText(normalized);
         },
         () => {
           // On completion - normalize and cache the final summary
@@ -230,20 +272,31 @@ export default function SummaryTab({
     );
   }
 
-  // Show summary content - clean format without header, badges, or regenerate button
+  // Show summary content - clean format with smooth streaming UX
   return (
     <div
       role="tabpanel"
       id="summary-panel"
       aria-labelledby="summary-tab"
+      className={styles.summaryPanel}
     >
       {(summary || streamingText) && (
         <>
-          <div className="markdown" ref={summaryContainerRef}>
-            <ReactMarkdown>
+          {/* Content with smooth reveal animation */}
+          <div 
+            className={`${styles.summaryContent} ${isGenerating ? styles.streaming : styles.complete}`}
+            ref={summaryContainerRef}
+          >
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {isGenerating ? streamingText : summary}
             </ReactMarkdown>
-            {isGenerating && <span className={styles.cursor}>|</span>}
+            
+            {/* Animated typing cursor during streaming */}
+            {isGenerating && (
+              <span className={styles.typingCursor} aria-hidden="true">
+                <span className={styles.cursorBlink}>▊</span>
+              </span>
+            )}
           </div>
           <div ref={summaryEndRef} />
         </>
